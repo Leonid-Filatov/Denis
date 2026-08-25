@@ -196,7 +196,7 @@
             margin-top: 10px;
         }
 
-        /* ===== МАСТУРБАЦИЯ ===== */
+        /* ===== МАСТУРБАЦИЯ (полностью заблюрена, пульсирует) ===== */
         .masturbation-block {
             background: linear-gradient(135deg, #ff6b9d, #b35eb5);
             border-radius: var(--radius);
@@ -204,6 +204,13 @@
             text-align: center;
             cursor: pointer;
             transition: 0.3s;
+            filter: blur(8px);
+            animation: pulse 2s ease-in-out infinite;
+            user-select: none;
+        }
+        .masturbation-block.unblurred {
+            filter: blur(0);
+            animation: none;
         }
         .masturbation-block:hover {
             transform: scale(1.02);
@@ -218,15 +225,19 @@
             font-weight: 900;
             color: white;
             margin: 6px 0 2px;
-            filter: blur(12px);
-            transition: filter 0.4s ease;
-        }
-        .masturbation-count.unblurred {
-            filter: blur(0);
+            /* число не размывается отдельно, так как весь блок размыт */
         }
         .masturbation-hint {
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes pulse {
+            0% { filter: blur(8px); opacity: 0.9; }
+            50% { filter: blur(6px); opacity: 1; }
+            100% { filter: blur(8px); opacity: 0.9; }
         }
 
         /* ===== DOTA ===== */
@@ -510,7 +521,7 @@
             font-weight: 700;
         }
 
-        /* ===== ИГРА С НОСКАМИ (по всему экрану) ===== */
+        /* ===== ИГРА «СОБЕРИ НОСКИ И ТРУСЫ» (5 предметов внутри оверлея) ===== */
         .game-overlay {
             position: fixed;
             top: 0;
@@ -532,10 +543,9 @@
             background: var(--card);
             border-radius: var(--radius);
             padding: 24px 20px;
-            max-width: 500px;
+            max-width: 360px;
             width: 100%;
             text-align: center;
-            position: relative;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
         }
         .game-box h2 {
@@ -545,10 +555,39 @@
             color: var(--text-light);
             margin-bottom: 14px;
         }
+        .sock-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 12px 0 18px;
+            justify-items: center;
+        }
+        .sock-item-game {
+            font-size: 2.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #3a3a5a;
+            border-radius: 12px;
+            padding: 12px 6px;
+            width: 100%;
+            border: 2px solid transparent;
+            user-select: none;
+        }
+        .sock-item-game:hover {
+            transform: scale(1.05);
+            background: #4a4a6a;
+        }
+        .sock-item-game.collected {
+            opacity: 0.3;
+            transform: scale(0.9);
+            filter: grayscale(1);
+            pointer-events: none;
+            border-color: var(--green);
+        }
         .game-progress {
             font-size: 1rem;
             font-weight: 600;
-            margin: 10px 0;
+            margin: 6px 0;
             color: var(--text-light);
         }
         .game-complete {
@@ -565,36 +604,6 @@
             font-weight: 700;
             color: white;
             cursor: pointer;
-        }
-
-        /* Специальный контейнер для разбросанных носков (занимает весь экран) */
-        .socks-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            /* чтобы клики проходили к носкам, но не мешали другим элементам */
-            z-index: 10000;
-        }
-        .sock-item {
-            position: absolute;
-            font-size: 2.8rem;
-            cursor: pointer;
-            pointer-events: auto;
-            transition: transform 0.15s;
-            user-select: none;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
-        }
-        .sock-item:hover {
-            transform: scale(1.2);
-        }
-        .sock-item.collected {
-            opacity: 0;
-            transform: scale(0.2);
-            pointer-events: none;
-            transition: opacity 0.3s, transform 0.3s;
         }
 
         /* ===== ОСНОВНАЯ ПАНЕЛЬ ===== */
@@ -626,11 +635,19 @@
             .currency-grid {
                 grid-template-columns: 1fr 1fr;
             }
-            .sock-item {
-                font-size: 2rem;
-            }
             .main-panel {
                 grid-template-columns: 1fr;
+            }
+            .sock-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+            .sock-item-game {
+                font-size: 2.2rem;
+                padding: 10px 4px;
+            }
+            .game-box {
+                max-width: 300px;
             }
         }
         @media (min-width: 1200px) {
@@ -687,15 +704,13 @@
     <div class="game-overlay" id="gameOverlay">
         <div class="game-box">
             <h2>🧦 Собери носки и трусы!</h2>
-            <div class="sub">Кликни на все предметы, разбросанные по экрану</div>
-            <div class="game-progress" id="sockProgress">Собрано: 0 / 13</div>
+            <div class="sub">Кликни на каждый предмет, чтобы отправить в корзину</div>
+            <div class="sock-grid" id="sockGrid"></div>
+            <div class="game-progress" id="sockProgress">Собрано: 0 / 5</div>
             <div id="gameCompleteMessage" class="hidden game-complete">🎉 Всё собрано! Приложение разблокировано!</div>
             <button class="btn-start-game" id="startGameBtn">🔄 Начать заново</button>
         </div>
     </div>
-
-    <!-- Контейнер для носков (поверх всего) -->
-    <div class="socks-container" id="socksContainer"></div>
 
     <!-- ===== ОСНОВНОЕ ПРИЛОЖЕНИЕ ===== -->
     <div class="app-container" id="app">
@@ -743,22 +758,20 @@
         const db = firebase.firestore();
 
         // ================================================================
-        // 2. ИГРА С НОСКАМИ (разброс по всему экрану)
+        // 2. ИГРА «СОБЕРИ НОСКИ И ТРУСЫ» (5 предметов)
         // ================================================================
         const gameOverlay = document.getElementById('gameOverlay');
-        const socksContainer = document.getElementById('socksContainer');
+        const sockGrid = document.getElementById('sockGrid');
         const sockProgress = document.getElementById('sockProgress');
         const gameCompleteMessage = document.getElementById('gameCompleteMessage');
         const startGameBtn = document.getElementById('startGameBtn');
 
-        let sockItems = [];
         let collectedCount = 0;
-        const totalItems = 13; // 10 носков + 3 труса
+        const totalItems = 5; // 3 носка + 2 труса
         let gameCompleted = false;
 
-        const emojis = [];
-        for (let i = 0; i < 10; i++) emojis.push('🧦');
-        for (let i = 0; i < 3; i++) emojis.push('🩲');
+        // Массив эмодзи: 3 носка, 2 труса
+        const emojis = ['🧦', '🧦', '🧦', '🩲', '🩲'];
 
         function shuffleArray(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
@@ -768,24 +781,16 @@
             return arr;
         }
 
-        function spawnSocks() {
-            socksContainer.innerHTML = '';
+        function renderSocks() {
+            sockGrid.innerHTML = '';
             const shuffled = shuffleArray([...emojis]);
-            const containerRect = document.documentElement.getBoundingClientRect();
-            const padding = 60;
-
             shuffled.forEach((emoji) => {
-                const el = document.createElement('div');
-                el.className = 'sock-item';
-                el.textContent = emoji;
-                const x = padding + Math.random() * (containerRect.width - padding * 2);
-                const y = padding + Math.random() * (containerRect.height - padding * 2);
-                el.style.left = x + 'px';
-                el.style.top = y + 'px';
-                el.dataset.collected = 'false';
-                el.addEventListener('click', () => collectSock(el));
-                socksContainer.appendChild(el);
-                sockItems.push(el);
+                const div = document.createElement('div');
+                div.className = 'sock-item-game';
+                div.textContent = emoji;
+                div.dataset.collected = 'false';
+                div.addEventListener('click', () => collectSock(div));
+                sockGrid.appendChild(div);
             });
         }
 
@@ -803,7 +808,6 @@
                     gameOverlay.classList.add('hidden');
                     const mainPanel = document.getElementById('mainPanel');
                     mainPanel.classList.remove('hidden');
-                    // Всегда перестраиваем панель, чтобы гарантировать наличие карточек
                     buildMainPanel();
                 }, 1200);
             }
@@ -816,10 +820,8 @@
         function resetGame() {
             collectedCount = 0;
             gameCompleted = false;
-            sockItems = [];
             gameCompleteMessage.classList.add('hidden');
-            socksContainer.innerHTML = '';
-            spawnSocks();
+            renderSocks();
             updateSockProgress();
             gameOverlay.classList.remove('hidden');
             const mainPanel = document.getElementById('mainPanel');
@@ -838,10 +840,8 @@
         // ================================================================
         function buildMainPanel() {
             const panel = document.getElementById('mainPanel');
-            // Очищаем, чтобы не дублировать
             panel.innerHTML = '';
 
-            // Шаблоны карточек (вставляем как HTML)
             const cardsHTML = `
                 <!-- 1. Экономия -->
                 <div class="card savings-block">
@@ -858,11 +858,11 @@
                     </div>
                 </div>
 
-                <!-- 2. Мастурбация -->
+                <!-- 2. Мастурбация (полностью заблюрена, пульсирует) -->
                 <div class="card masturbation-block" id="masturbationBlock">
                     <div class="masturbation-title">🍆 Счётчик мастурбации</div>
                     <div class="masturbation-count" id="masturbationCount">116</div>
-                    <div class="masturbation-hint">(кликни, чтобы разблокировать)</div>
+                    <div class="masturbation-hint">🔒 Нажмите, чтобы разблокировать</div>
                 </div>
 
                 <!-- 3. Dota 2 -->
@@ -936,7 +936,6 @@
             `;
             panel.innerHTML = cardsHTML;
 
-            // После вставки нужно переинициализировать все обработчики и ссылки на элементы
             initAfterBuild();
         }
 
@@ -983,7 +982,7 @@
             // Сброс
             window.resetBtn = document.getElementById('resetBtn');
 
-            // Перепривязываем события
+            // Инициализация блоков
             initSavings();
             initMasturbation();
             initDota();
@@ -1082,7 +1081,7 @@
         function initMasturbation() {
             masturbationBlock.addEventListener('click', () => {
                 masturbationUnblurred = !masturbationUnblurred;
-                masturbationCount.classList.toggle('unblurred', masturbationUnblurred);
+                masturbationBlock.classList.toggle('unblurred', masturbationUnblurred);
                 if (currentUser) {
                     localStorage.setItem('masturbation_unblurred_' + currentUser.uid, masturbationUnblurred ? 'true' : 'false');
                 }
@@ -1095,7 +1094,7 @@
                 const saved = localStorage.getItem('masturbation_unblurred_' + currentUser.uid);
                 if (saved === 'true') {
                     masturbationUnblurred = true;
-                    masturbationCount.classList.add('unblurred');
+                    masturbationBlock.classList.add('unblurred');
                 }
             }
         }
@@ -1147,7 +1146,6 @@
             choiceBtns.forEach(btn => {
                 btn.addEventListener('click', () => setChoice(btn.dataset.choice));
             });
-            // Данные загружаются через подписку
         }
 
         function getTodayKey() {
@@ -1544,9 +1542,7 @@
                     gameOverlay.classList.add('hidden');
                     const panel = document.getElementById('mainPanel');
                     panel.classList.remove('hidden');
-                    // Всегда перестраиваем панель, чтобы гарантировать наличие элементов
                     buildMainPanel();
-                    // Загружаем данные
                     loadSavingsFromFirebase();
                     loadDotaFromFirebase();
                     loadMasturbationState();
@@ -1577,8 +1573,10 @@
         // ================================================================
         // 7. СТАРТ
         // ================================================================
-        // При первом запуске показываем авторизацию
-        // Если пользователь уже авторизован, auth.onAuthStateChanged сработает сразу.
+        // Инициализация игры при первом запуске
+        renderSocks();
+        updateSockProgress();
+
         console.log('Приложение готово.');
     </script>
 </body>
