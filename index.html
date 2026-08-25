@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Денис — Спортик vs Неряха</title>
+    <title>Денис — давай за дело!</title>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -27,12 +27,21 @@
             --yellow: #ffc107;
             --gray: #616161;
         }
+        .light-theme {
+            --bg: #f0f2f5;
+            --card: #ffffff;
+            --text: #1a1a2e;
+            --text-light: #555;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
         body {
             font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
             padding: 16px;
+            position: relative;
+            transition: background 0.3s, color 0.3s;
         }
         .app-container {
             max-width: 1400px;
@@ -60,6 +69,28 @@
             display: none !important;
         }
 
+        /* ===== ФОНОВЫЕ СЛОВА ===== */
+        .bg-words {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .bg-word {
+            position: absolute;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--text);
+            opacity: 0.04;
+            white-space: nowrap;
+            transition: all 2s ease;
+            user-select: none;
+        }
+
         /* ===== ХЕДЕР ===== */
         .header {
             grid-column: 1 / -1;
@@ -69,13 +100,17 @@
             flex-wrap: wrap;
             gap: 12px;
             margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
         }
         .header h1 {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 800;
             background: linear-gradient(135deg, #ff6b6b, #ffd93d);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-align: center;
+            flex: 1;
         }
         .header .user-info {
             display: flex;
@@ -96,6 +131,20 @@
             background: rgba(255, 255, 255, 0.2);
             color: white;
         }
+        .theme-toggle {
+            background: transparent;
+            border: 2px solid var(--text-light);
+            border-radius: 30px;
+            padding: 6px 14px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text);
+            transition: 0.2s;
+        }
+        .theme-toggle:hover {
+            background: var(--text-light);
+            color: var(--bg);
+        }
 
         /* ===== АВТОРИЗАЦИЯ ===== */
         .auth-box {
@@ -115,8 +164,8 @@
             padding: 12px 16px;
             border: 2px solid #3a3a5a;
             border-radius: 12px;
-            background: #1a1a2e;
-            color: white;
+            background: var(--card);
+            color: var(--text);
             font-size: 1rem;
             margin-bottom: 12px;
         }
@@ -148,38 +197,7 @@
             font-weight: 600;
         }
 
-        /* ===== КНОПКИ ===== */
-        .btn {
-            padding: 8px 18px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn-primary {
-            background: #ffd93d;
-            color: #1a1a2e;
-        }
-        .btn-primary:hover {
-            background: #ffc107;
-        }
-        .btn-danger {
-            background: #f44336;
-            color: white;
-        }
-        .btn-danger:hover {
-            background: #d32f2f;
-        }
-        .btn-success {
-            background: var(--green);
-            color: white;
-        }
-        .btn-success:hover {
-            background: #388e3c;
-        }
-
-        /* ===== ЭКОНОМИЯ ===== */
+        /* ===== БЛОКИ ===== */
         .savings-block .amount {
             font-size: 2.6rem;
             font-weight: 800;
@@ -189,14 +207,8 @@
             font-size: 0.9rem;
             color: var(--text-light);
         }
-        .savings-block .controls {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
 
-        /* ===== МАСТУРБАЦИЯ (полностью заблюрена, пульсирует) ===== */
+        /* Мастурбация */
         .masturbation-block {
             background: linear-gradient(135deg, #ff6b9d, #b35eb5);
             border-radius: var(--radius);
@@ -219,13 +231,13 @@
             font-weight: 700;
             color: white;
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            font-size: 1.1rem;
         }
         .masturbation-count {
             font-size: 2.8rem;
             font-weight: 900;
             color: white;
             margin: 6px 0 2px;
-            /* число не размывается отдельно, так как весь блок размыт */
         }
         .masturbation-hint {
             font-size: 0.8rem;
@@ -233,14 +245,13 @@
             font-weight: 600;
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
         }
-
         @keyframes pulse {
             0% { filter: blur(8px); opacity: 0.9; }
             50% { filter: blur(6px); opacity: 1; }
             100% { filter: blur(8px); opacity: 0.9; }
         }
 
-        /* ===== DOTA ===== */
+        /* Dota */
         .dota-block {
             background: linear-gradient(145deg, #1a0f0a, #2d1810);
             border: 2px solid #b8860b;
@@ -248,12 +259,32 @@
             padding: 16px;
             text-align: center;
             box-shadow: 0 0 20px rgba(184, 134, 11, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .dota-block .sad-emojis {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            font-size: 2rem;
+            opacity: 0.15;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            z-index: 0;
         }
         .dota-title {
             font-size: 1.1rem;
             font-weight: 800;
             color: #d4af37;
             text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+            position: relative;
+            z-index: 1;
         }
         .dota-count {
             font-size: 3rem;
@@ -262,6 +293,8 @@
             text-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
             font-family: 'Cinzel', 'Segoe UI', serif;
             letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
         }
         .dota-controls {
             display: flex;
@@ -269,6 +302,8 @@
             justify-content: center;
             gap: 12px;
             margin-top: 6px;
+            position: relative;
+            z-index: 1;
         }
         .dota-controls button {
             background: #3a251a;
@@ -304,309 +339,102 @@
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
         }
 
-        /* ===== СПОРТИК / НЕРЯХА ===== */
-        .today-card {
-            text-align: center;
-        }
-        .today-card .date {
-            color: var(--text-light);
-            font-size: 0.9rem;
-        }
-        .today-card .status {
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin: 6px 0;
-        }
-        .today-card .sub-status {
-            font-size: 0.9rem;
-            color: var(--text-light);
-        }
-        .button-group {
+        /* Часы */
+        .clock-container {
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
             justify-content: center;
-            margin: 12px 0 4px;
-        }
-        .btn-choice {
-            flex: 1 1 70px;
-            padding: 10px 8px;
-            border: 2px solid #3a3a5a;
-            border-radius: 14px;
-            background: transparent;
-            color: var(--text);
-            font-weight: 700;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: 0.25s;
-        }
-        .btn-choice.active-sport {
-            border-color: var(--green);
-            background: rgba(76, 175, 80, 0.25);
-            color: #81c784;
-        }
-        .btn-choice.active-sloppy {
-            border-color: var(--red);
-            background: rgba(244, 67, 54, 0.25);
-            color: #ef9a9a;
-        }
-        .btn-choice.active-both {
-            border-color: var(--yellow);
-            background: rgba(255, 193, 7, 0.2);
-            color: #ffd54f;
-        }
-        .btn-choice.active-none {
-            border-color: var(--gray);
-            background: rgba(97, 97, 97, 0.15);
-            color: #aaa;
-        }
-        .btn-choice:hover {
-            transform: scale(1.02);
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            margin-top: 6px;
-        }
-        .stat-item {
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 12px;
-            padding: 12px 6px;
-            text-align: center;
-        }
-        .stat-item .number {
-            font-size: 1.6rem;
-            font-weight: 700;
-        }
-        .stat-item .label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            color: var(--text-light);
-        }
-        .stat-item.sport .number {
-            color: var(--green);
-        }
-        .stat-item.sloppy .number {
-            color: var(--red);
-        }
-        .stat-item.both .number {
-            color: var(--yellow);
-        }
-
-        /* ===== ДНИ НЕДЕЛИ С ЗАМЕТКАМИ ===== */
-        .weekdays-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-top: 8px;
-        }
-        .weekday-item {
-            display: flex;
-            flex-direction: column;
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 10px;
-            padding: 8px 10px;
-        }
-        .weekday-item label {
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: var(--text-light);
-        }
-        .weekday-item input {
-            width: 100%;
-            padding: 6px 10px;
-            border: 2px solid #3a3a5a;
-            border-radius: 8px;
-            background: #1a1a2e;
-            color: white;
-            font-size: 0.9rem;
-            margin-top: 4px;
-            max-width: 100%;
-        }
-        .weekday-item input:focus {
-            outline: none;
-            border-color: #ffd93d;
-        }
-
-        /* ===== КРЕСТИКИ-НОЛИКИ ===== */
-        .ttt-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
-            max-width: 240px;
-            margin: 10px auto;
-        }
-        .ttt-cell {
-            aspect-ratio: 1;
-            background: #1a1a2e;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.4rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-            border: 2px solid #3a3a5a;
-        }
-        .ttt-cell:hover {
-            background: #2a2a4a;
-        }
-        .ttt-cell.disabled {
-            cursor: default;
-            opacity: 0.7;
-        }
-        .ttt-status {
-            text-align: center;
-            font-size: 1rem;
-            margin: 6px 0;
-            color: var(--text-light);
-        }
-        .ttt-reset {
-            display: block;
-            margin: 8px auto 0;
-            padding: 6px 20px;
-            background: var(--yellow);
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            color: #1a1a2e;
-            cursor: pointer;
-        }
-
-        /* ===== КУРСЫ ВАЛЮТ ===== */
-        .currency-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 6px;
-        }
-        .currency-item {
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 12px;
-            padding: 12px;
-            text-align: center;
-        }
-        .currency-item .pair {
-            font-size: 0.8rem;
-            color: var(--text-light);
-        }
-        .currency-item .value {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--yellow);
-        }
-
-        /* ===== ВРЕМЯ СТОЛИЦ ===== */
-        .time-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
-            margin-top: 6px;
-        }
-        .time-item {
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 10px;
-            padding: 10px 6px;
-            text-align: center;
-        }
-        .time-item .city {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-light);
-        }
-        .time-item .time {
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
-
-        /* ===== ИГРА «СОБЕРИ НОСКИ И ТРУСЫ» (5 предметов внутри оверлея) ===== */
-        .game-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .game-overlay.hidden {
-            display: none;
-        }
-        .game-box {
-            background: var(--card);
-            border-radius: var(--radius);
-            padding: 24px 20px;
-            max-width: 360px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-        }
-        .game-box h2 {
-            margin-bottom: 6px;
-        }
-        .game-box .sub {
-            color: var(--text-light);
-            margin-bottom: 14px;
-        }
-        .sock-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin: 12px 0 18px;
-            justify-items: center;
-        }
-        .sock-item-game {
-            font-size: 2.8rem;
-            cursor: pointer;
-            transition: 0.2s;
-            background: #3a3a5a;
-            border-radius: 12px;
-            padding: 12px 6px;
-            width: 100%;
-            border: 2px solid transparent;
-            user-select: none;
-        }
-        .sock-item-game:hover {
-            transform: scale(1.05);
-            background: #4a4a6a;
-        }
-        .sock-item-game.collected {
-            opacity: 0.3;
-            transform: scale(0.9);
-            filter: grayscale(1);
-            pointer-events: none;
-            border-color: var(--green);
-        }
-        .game-progress {
-            font-size: 1rem;
-            font-weight: 600;
-            margin: 6px 0;
-            color: var(--text-light);
-        }
-        .game-complete {
-            color: var(--yellow);
-            font-size: 1.2rem;
-            font-weight: 700;
             margin: 10px 0;
         }
-        .game-box .btn-start-game {
-            padding: 10px 28px;
-            background: var(--green);
-            border: none;
-            border-radius: 14px;
-            font-weight: 700;
-            color: white;
-            cursor: pointer;
+        .clock-canvas {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: var(--card);
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
         }
 
-        /* ===== ОСНОВНАЯ ПАНЕЛЬ ===== */
+        /* Спортик / Неряха (как было) */
+        .today-card { text-align: center; }
+        .today-card .date { color: var(--text-light); font-size: 0.9rem; margin-bottom: 4px; }
+        .today-card .status { font-size: 1.6rem; font-weight: 700; margin: 6px 0; }
+        .today-card .sub-status { font-size: 0.9rem; color: var(--text-light); }
+        .button-group { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 12px 0 4px; }
+        .btn-choice { flex: 1 1 70px; padding: 10px 8px; border: 2px solid #3a3a5a; border-radius: 14px; background: transparent; color: var(--text); font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: 0.25s; }
+        .btn-choice.active-sport { border-color: var(--green); background: rgba(76,175,80,0.25); color: #81c784; }
+        .btn-choice.active-sloppy { border-color: var(--red); background: rgba(244,67,54,0.25); color: #ef9a9a; }
+        .btn-choice.active-both { border-color: var(--yellow); background: rgba(255,193,7,0.2); color: #ffd54f; }
+        .btn-choice.active-none { border-color: var(--gray); background: rgba(97,97,97,0.15); color: #aaa; }
+        .btn-choice:hover { transform: scale(1.02); }
+        .streak-container { display: flex; justify-content: space-around; margin: 10px 0 6px; flex-wrap: wrap; gap: 8px; }
+        .streak-item { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 6px 12px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; }
+        .streak-item .emoji { font-size: 1.2rem; }
+        .streak-item .count { font-weight: 700; }
+        .streak-item.sport .count { color: var(--green); }
+        .streak-item.sloppy .count { color: var(--red); }
+        .streak-item.both .count { color: var(--yellow); }
+        .streak-item.none .count { color: var(--gray); }
+        .mini-chart { display: flex; justify-content: center; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+        .mini-chart .day-dot { font-size: 1.4rem; line-height: 1; filter: grayscale(0.2); }
+        .mini-chart .day-dot.today { border: 2px solid var(--yellow); border-radius: 50%; padding: 0 2px; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 6px; }
+        .stat-item { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 12px 6px; text-align: center; }
+        .stat-item .number { font-size: 1.6rem; font-weight: 700; }
+        .stat-item .label { font-size: 0.7rem; text-transform: uppercase; color: var(--text-light); }
+        .stat-item.sport .number { color: var(--green); }
+        .stat-item.sloppy .number { color: var(--red); }
+        .stat-item.both .number { color: var(--yellow); }
+
+        /* Заметки */
+        .weekdays-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+        .weekday-item { display: flex; flex-direction: column; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 8px 10px; }
+        .weekday-item label { font-weight: 600; font-size: 0.85rem; color: var(--text-light); }
+        .weekday-item input { width: 100%; padding: 6px 10px; border: 2px solid #3a3a5a; border-radius: 8px; background: var(--card); color: var(--text); font-size: 0.9rem; margin-top: 4px; max-width: 100%; }
+        .weekday-item input:focus { outline: none; border-color: #ffd93d; }
+
+        /* Крестики-нолики */
+        .ttt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; max-width: 240px; margin: 10px auto; }
+        .ttt-cell { aspect-ratio: 1; background: var(--card); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 2.4rem; font-weight: 700; cursor: pointer; transition: 0.2s; border: 2px solid var(--text-light); }
+        .ttt-cell:hover { background: var(--text-light); opacity: 0.6; }
+        .ttt-cell.disabled { cursor: default; opacity: 0.7; }
+        .ttt-status { text-align: center; font-size: 1rem; margin: 6px 0; color: var(--text-light); }
+        .ttt-reset { display: block; margin: 8px auto 0; padding: 6px 20px; background: var(--yellow); border: none; border-radius: 10px; font-weight: 700; color: #1a1a2e; cursor: pointer; }
+        .ttt-scores { display: flex; justify-content: space-around; font-size: 0.9rem; margin-top: 8px; }
+        .ttt-scores span { font-weight: 700; }
+
+        /* Змейка */
+        .snake-container { display: flex; flex-direction: column; align-items: center; }
+        .snake-canvas { border: 2px solid var(--text-light); border-radius: 10px; background: var(--card); }
+        .snake-score { font-size: 1.2rem; margin-bottom: 6px; }
+        .snake-controls { margin-top: 8px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        .snake-controls button { padding: 6px 16px; border: none; border-radius: 10px; font-weight: 700; background: var(--yellow); color: #1a1a2e; cursor: pointer; }
+
+        /* Курсы валют */
+        .currency-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+        .currency-item { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 12px; text-align: center; }
+        .currency-item .pair { font-size: 0.8rem; color: var(--text-light); }
+        .currency-item .value { font-size: 1.6rem; font-weight: 700; color: var(--yellow); }
+
+        /* Время столиц */
+        .time-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-top: 6px; }
+        .time-item { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 10px 6px; text-align: center; }
+        .time-item .city { font-size: 0.8rem; font-weight: 600; color: var(--text-light); }
+        .time-item .time { font-size: 1.2rem; font-weight: 700; }
+
+        /* Игра с носками */
+        .game-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+        .game-overlay.hidden { display: none; }
+        .game-box { background: var(--card); border-radius: var(--radius); padding: 24px 20px; max-width: 360px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+        .game-box h2 { margin-bottom: 6px; }
+        .game-box .sub { color: var(--text-light); margin-bottom: 14px; }
+        .sock-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 12px 0 18px; justify-items: center; }
+        .sock-item-game { font-size: 2.8rem; cursor: pointer; transition: 0.2s; background: #3a3a5a; border-radius: 12px; padding: 12px 6px; width: 100%; border: 2px solid transparent; user-select: none; }
+        .sock-item-game:hover { transform: scale(1.05); background: #4a4a6a; }
+        .sock-item-game.collected { opacity: 0.3; transform: scale(0.9); filter: grayscale(1); pointer-events: none; border-color: var(--green); }
+        .game-progress { font-size: 1rem; font-weight: 600; margin: 6px 0; color: var(--text-light); }
+        .game-complete { color: var(--yellow); font-size: 1.2rem; font-weight: 700; margin: 10px 0; }
+        .game-box .btn-start-game { padding: 10px 28px; background: var(--green); border: none; border-radius: 14px; font-weight: 700; color: white; cursor: pointer; }
+
+        /* Основная панель */
         .main-panel {
             display: grid;
             grid-column: 1 / -1;
@@ -614,112 +442,62 @@
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
         }
 
+        .reset-btn { background: transparent; border: 1px solid #444; color: var(--text-light); padding: 6px 14px; border-radius: 30px; font-size: 0.8rem; cursor: pointer; transition: 0.2s; margin-top: 6px; }
+        .reset-btn:hover { border-color: #ff6b6b; color: #ff6b6b; }
+        .quote-box { background: rgba(255,255,255,0.04); border-radius: 14px; padding: 12px 16px; text-align: center; font-style: italic; color: var(--text-light); border-left: 4px solid #ffd93d; grid-column: 1 / -1; }
+        .quote-box .author { font-style: normal; font-weight: 600; color: var(--text); margin-top: 4px; font-size: 0.8rem; }
+
         /* ===== АДАПТАЦИЯ ===== */
         @media (max-width: 600px) {
-            .app-container {
-                grid-template-columns: 1fr;
-                gap: 14px;
-            }
-            .header h1 {
-                font-size: 1.6rem;
-            }
-            .weekdays-grid {
-                grid-template-columns: 1fr;
-            }
-            .ttt-grid {
-                max-width: 200px;
-            }
-            .time-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .currency-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .main-panel {
-                grid-template-columns: 1fr;
-            }
-            .sock-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 8px;
-            }
-            .sock-item-game {
-                font-size: 2.2rem;
-                padding: 10px 4px;
-            }
-            .game-box {
-                max-width: 300px;
-            }
+            .app-container { grid-template-columns: 1fr; gap: 14px; }
+            .header h1 { font-size: 1.6rem; }
+            .weekdays-grid { grid-template-columns: 1fr; }
+            .ttt-grid { max-width: 200px; }
+            .time-grid { grid-template-columns: 1fr 1fr; }
+            .currency-grid { grid-template-columns: 1fr 1fr; }
+            .main-panel { grid-template-columns: 1fr; }
+            .sock-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .sock-item-game { font-size: 2.2rem; padding: 10px 4px; }
+            .game-box { max-width: 300px; }
+            .streak-container { flex-direction: column; align-items: center; }
+            .clock-canvas { width: 140px; height: 140px; }
         }
         @media (min-width: 1200px) {
-            .main-panel {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            .weekdays-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .time-grid {
-                grid-template-columns: repeat(5, 1fr);
-            }
-        }
-
-        .reset-btn {
-            background: transparent;
-            border: 1px solid #444;
-            color: var(--text-light);
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-top: 6px;
-        }
-        .reset-btn:hover {
-            border-color: #ff6b6b;
-            color: #ff6b6b;
-        }
-
-        /* Цитата */
-        .quote-box {
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 14px;
-            padding: 12px 16px;
-            text-align: center;
-            font-style: italic;
-            color: var(--text-light);
-            border-left: 4px solid #ffd93d;
-            grid-column: 1 / -1;
-        }
-        .quote-box .author {
-            font-style: normal;
-            font-weight: 600;
-            color: var(--text);
-            margin-top: 4px;
-            font-size: 0.8rem;
+            .main-panel { grid-template-columns: repeat(3, 1fr); }
+            .weekdays-grid { grid-template-columns: 1fr 1fr; }
+            .time-grid { grid-template-columns: repeat(5, 1fr); }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== ИГРА «СОБЕРИ НОСКИ И ТРУСЫ» (оверлей) ===== -->
+    <!-- ===== ФОНОВЫЕ СЛОВА ===== -->
+    <div class="bg-words" id="bgWords"></div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast-container" id="toastContainer" style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:99999; pointer-events:none;"></div>
+
+    <!-- ===== ИГРА «СОБЕРИ НОСКИ» ===== -->
     <div class="game-overlay" id="gameOverlay">
         <div class="game-box">
             <h2>🧦 Собери носки и трусы!</h2>
-            <div class="sub">Кликни на каждый предмет, чтобы отправить в корзину</div>
+            <div class="sub">Кликни на каждый предмет</div>
             <div class="sock-grid" id="sockGrid"></div>
             <div class="game-progress" id="sockProgress">Собрано: 0 / 5</div>
-            <div id="gameCompleteMessage" class="hidden game-complete">🎉 Всё собрано! Приложение разблокировано!</div>
-            <button class="btn-start-game" id="startGameBtn">🔄 Начать заново</button>
+            <div id="gameCompleteMessage" class="hidden game-complete">🎉 Готово!</div>
+            <button class="btn-start-game" id="startGameBtn">🔄 Заново</button>
         </div>
     </div>
 
-    <!-- ===== ОСНОВНОЕ ПРИЛОЖЕНИЕ ===== -->
+    <!-- ===== ОСНОВНОЙ КОНТЕЙНЕР ===== -->
     <div class="app-container" id="app">
 
         <!-- ХЕДЕР -->
         <div class="header">
-            <h1>🏋️‍♂️ Денис</h1>
+            <h1>Денис давай за дело!</h1>
             <div class="user-info" id="userInfo">
                 <span id="userEmail"></span>
+                <button class="theme-toggle" id="themeToggle">🌓</button>
                 <button class="logout-btn" id="logoutBtn">🚪</button>
             </div>
         </div>
@@ -737,7 +515,7 @@
             </div>
         </div>
 
-        <!-- ОСНОВНОЙ ИНТЕРФЕЙС (показывается после авторизации и игры) -->
+        <!-- ОСНОВНАЯ ПАНЕЛЬ -->
         <div id="mainPanel" class="main-panel hidden"></div>
     </div>
 
@@ -758,19 +536,28 @@
         const db = firebase.firestore();
 
         // ================================================================
-        // 2. ИГРА «СОБЕРИ НОСКИ И ТРУСЫ» (5 предметов)
+        // 2. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+        // ================================================================
+        function showToast(message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => { if (toast.parentNode) toast.remove(); }, 3000);
+        }
+
+        // ================================================================
+        // 3. ИГРА С НОСКАМИ
         // ================================================================
         const gameOverlay = document.getElementById('gameOverlay');
         const sockGrid = document.getElementById('sockGrid');
         const sockProgress = document.getElementById('sockProgress');
         const gameCompleteMessage = document.getElementById('gameCompleteMessage');
         const startGameBtn = document.getElementById('startGameBtn');
-
         let collectedCount = 0;
-        const totalItems = 5; // 3 носка + 2 труса
+        const totalItems = 5;
         let gameCompleted = false;
-
-        // Массив эмодзи: 3 носка, 2 труса
         const emojis = ['🧦', '🧦', '🧦', '🩲', '🩲'];
 
         function shuffleArray(arr) {
@@ -809,6 +596,8 @@
                     const mainPanel = document.getElementById('mainPanel');
                     mainPanel.classList.remove('hidden');
                     buildMainPanel();
+                    // Запускаем все автоматические счётчики
+                    startAllCounters();
                 }, 1200);
             }
         }
@@ -826,47 +615,42 @@
             gameOverlay.classList.remove('hidden');
             const mainPanel = document.getElementById('mainPanel');
             mainPanel.classList.add('hidden');
-            if (savingsRunning) {
-                startStopSavings();
-            }
-            savings = 0;
-            updateSavingsDisplay();
+            // Останавливаем все счётчики (если они были запущены)
+            stopAllCounters();
         }
 
         startGameBtn.addEventListener('click', resetGame);
 
         // ================================================================
-        // 3. ПОСТРОЕНИЕ MAINPANEL (все карточки)
+        // 4. ПОСТРОЕНИЕ MAINPANEL
         // ================================================================
         function buildMainPanel() {
             const panel = document.getElementById('mainPanel');
             panel.innerHTML = '';
 
             const cardsHTML = `
-                <!-- 1. Экономия -->
+                <!-- Экономия -->
                 <div class="card savings-block">
                     <div class="card-title">💰 Сэкономлено</div>
                     <div class="amount" id="savingsDisplay">0 ₽</div>
                     <div class="rate" id="savingsRate">5 ₽ / сек</div>
                     <div style="display:flex; gap:8px; flex-wrap:wrap; margin:6px 0;">
-                        <input type="number" id="rateInput" value="5" step="0.5" min="0.5" style="width:100px; padding:6px 10px; border-radius:8px; border:2px solid #3a3a5a; background:#1a1a2e; color:white;" />
+                        <input type="number" id="rateInput" value="5" step="0.5" min="0.5" style="width:100px; padding:6px 10px; border-radius:8px; border:2px solid #3a3a5a; background:var(--card); color:var(--text);" />
                         <button class="btn btn-primary" id="setRateBtn">Установить</button>
                     </div>
-                    <div class="controls">
-                        <button class="btn btn-success" id="startStopBtn">▶ Старт</button>
-                        <button class="btn btn-danger" id="resetSavingsBtn">Сброс</button>
-                    </div>
+                    <button class="btn btn-danger" id="resetSavingsBtn" style="margin-top:6px;">Сброс</button>
                 </div>
 
-                <!-- 2. Мастурбация (полностью заблюрена, пульсирует) -->
+                <!-- Мастурбация -->
                 <div class="card masturbation-block" id="masturbationBlock">
-                    <div class="masturbation-title">🍆 Счётчик мастурбации</div>
+                    <div class="masturbation-title" id="masturbationTitle">Ты подрочил уже 116 раз!</div>
                     <div class="masturbation-count" id="masturbationCount">116</div>
                     <div class="masturbation-hint">🔒 Нажмите, чтобы разблокировать</div>
                 </div>
 
-                <!-- 3. Dota 2 -->
+                <!-- Dota 2 -->
                 <div class="card dota-block">
+                    <div class="sad-emojis" id="sadEmojis"></div>
                     <div class="dota-title">⚔️ Приогранные катки в Dota 2 🏆</div>
                     <div class="dota-count" id="dotaCount">0</div>
                     <div class="dota-controls">
@@ -874,9 +658,18 @@
                         <input type="number" id="dotaInput" value="0" min="0" step="1" />
                         <button id="dotaPlus">+</button>
                     </div>
+                    <button class="btn btn-danger" id="resetDotaBtn" style="margin-top:6px; background:#b8860b; color:#1a0f0a;">Сброс</button>
                 </div>
 
-                <!-- 4. Спортик / Неряха -->
+                <!-- Часы -->
+                <div class="card">
+                    <div class="card-title">🕒 Аналоговые часы</div>
+                    <div class="clock-container">
+                        <canvas id="clockCanvas" class="clock-canvas" width="200" height="200"></canvas>
+                    </div>
+                </div>
+
+                <!-- Спортик / Неряха -->
                 <div class="card today-card">
                     <div class="card-title">📋 Сегодня</div>
                     <div class="date" id="todayDate"></div>
@@ -888,6 +681,8 @@
                         <button class="btn-choice" data-choice="both">🤷 Оба</button>
                         <button class="btn-choice" data-choice="none">😴 Ничего</button>
                     </div>
+                    <div class="streak-container" id="streakContainer"></div>
+                    <div class="mini-chart" id="miniChart"></div>
                     <div class="stats-grid">
                         <div class="stat-item sport"><div class="number" id="sportCount">0</div><div class="label">Спортик</div></div>
                         <div class="stat-item sloppy"><div class="number" id="sloppyCount">0</div><div class="label">Неряха</div></div>
@@ -895,21 +690,39 @@
                     </div>
                 </div>
 
-                <!-- 5. Дни недели с заметками -->
+                <!-- Заметки по дням -->
                 <div class="card" id="weekdaysCard">
                     <div class="card-title">📝 Заметки по дням (до 30 симв.)</div>
                     <div class="weekdays-grid" id="weekdaysGrid"></div>
                 </div>
 
-                <!-- 6. Крестики-нолики -->
+                <!-- Крестики-нолики -->
                 <div class="card">
                     <div class="card-title">❌⭕ Крестики-нолики (против ПК)</div>
                     <div class="ttt-grid" id="tttGrid"></div>
                     <div class="ttt-status" id="tttStatus">Ваш ход (X)</div>
                     <button class="ttt-reset" id="tttReset">🔄 Новая игра</button>
+                    <div class="ttt-scores">
+                        <span>🏆 Победы: <span id="tttWins">0</span></span>
+                        <span>💔 Поражения: <span id="tttLosses">0</span></span>
+                    </div>
                 </div>
 
-                <!-- 7. Курсы валют -->
+                <!-- Змейка -->
+                <div class="card">
+                    <div class="card-title">🐍 Змейка</div>
+                    <div class="snake-container">
+                        <div class="snake-score">Очки: <span id="snakeScore">0</span></div>
+                        <canvas id="snakeCanvas" class="snake-canvas" width="300" height="300"></canvas>
+                        <div class="snake-controls">
+                            <button id="snakeStartBtn">▶ Старт</button>
+                            <button id="snakePauseBtn">⏸ Пауза</button>
+                            <button id="snakeResetBtn">🔄 Сброс</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Курсы валют -->
                 <div class="card">
                     <div class="card-title">💱 Курсы валют (к рублю)</div>
                     <div class="currency-grid" id="currencyGrid">
@@ -919,19 +732,19 @@
                     <div style="font-size:0.7rem; color:var(--text-light); margin-top:6px;">Обновляется раз в минуту</div>
                 </div>
 
-                <!-- 8. Время столиц -->
+                <!-- Время столиц -->
                 <div class="card">
                     <div class="card-title">🕒 Время в столицах</div>
                     <div class="time-grid" id="timeGrid"></div>
                 </div>
 
-                <!-- 9. Цитата -->
+                <!-- Цитата -->
                 <div class="quote-box" id="quoteBox">
                     «Будь спортиком, а не неряхой!»
                     <div class="author">— Денис</div>
                 </div>
 
-                <!-- 10. Сброс -->
+                <!-- Сброс -->
                 <button class="reset-btn" id="resetBtn" style="grid-column:1/-1; justify-self:center;">🔥 Сбросить все данные (дни)</button>
             `;
             panel.innerHTML = cardsHTML;
@@ -940,25 +753,30 @@
         }
 
         // ================================================================
-        // 4. ИНИЦИАЛИЗАЦИЯ ПОСЛЕ ПОСТРОЕНИЯ ПАНЕЛИ
+        // 5. ИНИЦИАЛИЗАЦИЯ ПОСЛЕ ПОСТРОЕНИЯ
         // ================================================================
         function initAfterBuild() {
-            // Экономия
+            // Ссылки на элементы
             window.savingsDisplay = document.getElementById('savingsDisplay');
             window.savingsRate = document.getElementById('savingsRate');
             window.rateInput = document.getElementById('rateInput');
             window.setRateBtn = document.getElementById('setRateBtn');
-            window.startStopBtn = document.getElementById('startStopBtn');
             window.resetSavingsBtn = document.getElementById('resetSavingsBtn');
-            // Мастурбация
+
             window.masturbationBlock = document.getElementById('masturbationBlock');
             window.masturbationCount = document.getElementById('masturbationCount');
-            // Dota
+            window.masturbationTitle = document.getElementById('masturbationTitle');
+
             window.dotaCountEl = document.getElementById('dotaCount');
             window.dotaInput = document.getElementById('dotaInput');
             window.dotaMinus = document.getElementById('dotaMinus');
             window.dotaPlus = document.getElementById('dotaPlus');
-            // Спортик
+            window.resetDotaBtn = document.getElementById('resetDotaBtn');
+            window.sadEmojis = document.getElementById('sadEmojis');
+
+            window.clockCanvas = document.getElementById('clockCanvas');
+            window.ctx = clockCanvas.getContext('2d');
+
             window.todayDate = document.getElementById('todayDate');
             window.todayStatus = document.getElementById('todayStatus');
             window.todaySub = document.getElementById('todaySub');
@@ -966,42 +784,86 @@
             window.sportCount = document.getElementById('sportCount');
             window.sloppyCount = document.getElementById('sloppyCount');
             window.bothCount = document.getElementById('bothCount');
-            // Дни недели
+            window.streakContainer = document.getElementById('streakContainer');
+            window.miniChart = document.getElementById('miniChart');
+
             window.weekdaysGrid = document.getElementById('weekdaysGrid');
-            // Крестики-нолики
+
             window.tttGrid = document.getElementById('tttGrid');
             window.tttStatus = document.getElementById('tttStatus');
             window.tttReset = document.getElementById('tttReset');
-            // Курсы
+            window.tttWins = document.getElementById('tttWins');
+            window.tttLosses = document.getElementById('tttLosses');
+
+            window.snakeCanvas = document.getElementById('snakeCanvas');
+            window.snakeCtx = snakeCanvas.getContext('2d');
+            window.snakeScore = document.getElementById('snakeScore');
+            window.snakeStartBtn = document.getElementById('snakeStartBtn');
+            window.snakePauseBtn = document.getElementById('snakePauseBtn');
+            window.snakeResetBtn = document.getElementById('snakeResetBtn');
+
             window.usdRateEl = document.getElementById('usdRate');
             window.eurRateEl = document.getElementById('eurRate');
-            // Время
             window.timeGrid = document.getElementById('timeGrid');
-            // Цитата
             window.quoteBox = document.getElementById('quoteBox');
-            // Сброс
             window.resetBtn = document.getElementById('resetBtn');
 
-            // Инициализация блоков
+            // Инициализация
             initSavings();
             initMasturbation();
             initDota();
             initSportik();
             initWeekdays();
             initTTT();
+            initSnake();
             initCurrency();
             initTime();
             initQuote();
             initReset();
+            initClock();
+            initBgWords();
+            initTheme();
         }
 
         // ================================================================
-        // 5. ИНИЦИАЛИЗАЦИЯ КАЖДОГО БЛОКА
+        // 6. ФОНОВЫЕ СЛОВА
         // ================================================================
-        let savingsRunning = false;
-        let savingsInterval = null;
+        const bgWordsList = ['Чиканок', 'ели-ели', 'Диб', 'Мяс', 'Да сука как так!', 'Какой же я долбаеб', 'господи...', 'А похуй'];
+        let bgWordsInterval;
+
+        function initBgWords() {
+            const container = document.getElementById('bgWords');
+            container.innerHTML = '';
+            // Создаём 20 слов с разными позициями
+            for (let i = 0; i < 20; i++) {
+                const span = document.createElement('span');
+                span.className = 'bg-word';
+                span.textContent = bgWordsList[Math.floor(Math.random() * bgWordsList.length)];
+                span.style.left = Math.random() * 90 + '%';
+                span.style.top = Math.random() * 90 + '%';
+                span.style.transform = `rotate(${Math.random() * 360}deg)`;
+                span.style.fontSize = (2 + Math.random() * 3) + 'rem';
+                container.appendChild(span);
+            }
+            // Обновляем слова и позиции каждые 10 секунд
+            if (bgWordsInterval) clearInterval(bgWordsInterval);
+            bgWordsInterval = setInterval(() => {
+                const words = container.querySelectorAll('.bg-word');
+                words.forEach(el => {
+                    el.textContent = bgWordsList[Math.floor(Math.random() * bgWordsList.length)];
+                    el.style.left = Math.random() * 90 + '%';
+                    el.style.top = Math.random() * 90 + '%';
+                    el.style.transform = `rotate(${Math.random() * 360}deg)`;
+                });
+            }, 10000);
+        }
+
+        // ================================================================
+        // 7. ЭКОНОМИЯ (автоматически)
+        // ================================================================
         let savings = 0;
         let ratePerSecond = 5;
+        let savingsInterval = null;
 
         function initSavings() {
             setRateBtn.addEventListener('click', () => {
@@ -1018,8 +880,6 @@
                 }
             });
 
-            startStopBtn.addEventListener('click', startStopSavings);
-
             resetSavingsBtn.addEventListener('click', () => {
                 if (confirm('Сбросить счётчик экономии?')) {
                     savings = 0;
@@ -1030,30 +890,23 @@
                     }
                 }
             });
+
+            // Загружаем сохранённое
+            loadSavingsFromFirebase();
+            // Запускаем счётчик
+            startSavingsCounter();
         }
 
-        function startStopSavings() {
-            if (savingsRunning) {
-                clearInterval(savingsInterval);
-                savingsRunning = false;
-                startStopBtn.textContent = '▶ Старт';
-                startStopBtn.classList.remove('btn-danger');
-                startStopBtn.classList.add('btn-success');
-            } else {
-                savingsRunning = true;
-                startStopBtn.textContent = '⏹ Стоп';
-                startStopBtn.classList.remove('btn-success');
-                startStopBtn.classList.add('btn-danger');
-                if (savingsInterval) clearInterval(savingsInterval);
-                savingsInterval = setInterval(() => {
-                    savings += ratePerSecond;
-                    updateSavingsDisplay();
-                    if (currentUser && Math.floor(savings) % 10 === 0) {
-                        db.collection('users').doc(currentUser.uid).set({ savings }, { merge: true })
-                            .catch(e => console.warn('Ошибка сохранения экономии:', e));
-                    }
-                }, 1000);
-            }
+        function startSavingsCounter() {
+            if (savingsInterval) clearInterval(savingsInterval);
+            savingsInterval = setInterval(() => {
+                savings += ratePerSecond;
+                updateSavingsDisplay();
+                if (currentUser && Math.floor(savings) % 10 === 0) {
+                    db.collection('users').doc(currentUser.uid).set({ savings }, { merge: true })
+                        .catch(e => console.warn('Ошибка сохранения экономии:', e));
+                }
+            }, 1000);
         }
 
         function updateSavingsDisplay() {
@@ -1076,8 +929,13 @@
             }).catch(e => console.warn('Не удалось загрузить экономию:', e));
         }
 
-        // Мастурбация
+        // ================================================================
+        // 8. МАСТУРБАЦИЯ (автоматический счётчик +5 сек)
+        // ================================================================
+        let masturbationCount = 116;
         let masturbationUnblurred = false;
+        let masturbationInterval = null;
+
         function initMasturbation() {
             masturbationBlock.addEventListener('click', () => {
                 masturbationUnblurred = !masturbationUnblurred;
@@ -1087,6 +945,35 @@
                 }
             });
             loadMasturbationState();
+            loadMasturbationCount();
+            startMasturbationCounter();
+        }
+
+        function startMasturbationCounter() {
+            if (masturbationInterval) clearInterval(masturbationInterval);
+            masturbationInterval = setInterval(() => {
+                masturbationCount++;
+                updateMasturbationDisplay();
+                if (currentUser) {
+                    db.collection('users').doc(currentUser.uid).set({ masturbationCount }, { merge: true })
+                        .catch(e => console.warn('Ошибка сохранения мастурбации:', e));
+                }
+            }, 5000);
+        }
+
+        function updateMasturbationDisplay() {
+            masturbationCount.textContent = masturbationCount;
+            masturbationTitle.textContent = `Ты подрочил уже ${masturbationCount} раз!`;
+        }
+
+        function loadMasturbationCount() {
+            if (!currentUser) return;
+            db.collection('users').doc(currentUser.uid).get().then(doc => {
+                if (doc.exists && doc.data().masturbationCount) {
+                    masturbationCount = doc.data().masturbationCount;
+                    updateMasturbationDisplay();
+                }
+            }).catch(e => console.warn('Не удалось загрузить мастурбацию:', e));
         }
 
         function loadMasturbationState() {
@@ -1099,8 +986,12 @@
             }
         }
 
-        // Dota
+        // ================================================================
+        // 9. DOTA (автоматический +1 каждые 3 секунды)
+        // ================================================================
         let dotaCount = 0;
+        let dotaInterval = null;
+
         function initDota() {
             dotaPlus.addEventListener('click', () => updateDotaDisplay(dotaCount + 1));
             dotaMinus.addEventListener('click', () => {
@@ -1111,7 +1002,26 @@
                 if (isNaN(val) || val < 0) val = 0;
                 updateDotaDisplay(val);
             });
+            resetDotaBtn.addEventListener('click', () => {
+                if (confirm('Сбросить счётчик Dota?')) {
+                    updateDotaDisplay(0);
+                }
+            });
             loadDotaFromFirebase();
+            startDotaCounter();
+            initSadEmojis();
+        }
+
+        function startDotaCounter() {
+            if (dotaInterval) clearInterval(dotaInterval);
+            dotaInterval = setInterval(() => {
+                dotaCount++;
+                updateDotaDisplay(dotaCount);
+                if (currentUser) {
+                    db.collection('users').doc(currentUser.uid).set({ dotaCount }, { merge: true })
+                        .catch(e => console.warn('Ошибка сохранения Dota:', e));
+                }
+            }, 3000);
         }
 
         function updateDotaDisplay(value) {
@@ -1138,19 +1048,173 @@
             }).catch(e => console.warn('Не удалось загрузить Dota:', e));
         }
 
-        // Спортик / Неряха
+        function initSadEmojis() {
+            const emojis = ['😢', '😭', '🥲', '😞', '😔', '😟', '😤', '😩'];
+            sadEmojis.innerHTML = '';
+            for (let i = 0; i < 30; i++) {
+                const span = document.createElement('span');
+                span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                span.style.fontSize = (1.5 + Math.random() * 2) + 'rem';
+                span.style.opacity = 0.1 + Math.random() * 0.15;
+                sadEmojis.appendChild(span);
+            }
+        }
+
+        // ================================================================
+        // 10. АНАЛОГОВЫЕ ЧАСЫ
+        // ================================================================
+        function initClock() {
+            drawClock();
+            setInterval(drawClock, 1000);
+        }
+
+        function drawClock() {
+            const canvas = document.getElementById('clockCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width, H = canvas.height;
+            const cx = W/2, cy = H/2, radius = 80;
+            ctx.clearRect(0, 0, W, H);
+
+            const now = new Date();
+            const hours = now.getHours() % 12;
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+
+            // Циферблат
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = 'var(--card)';
+            ctx.fill();
+            ctx.strokeStyle = 'var(--text)';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+
+            // Часовая стрелка
+            const hourAngle = (hours / 12) * 2 * Math.PI + (minutes / 60) * (2 * Math.PI / 12) - Math.PI/2;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + 0.5 * radius * Math.cos(hourAngle), cy + 0.5 * radius * Math.sin(hourAngle));
+            ctx.strokeStyle = 'var(--text)';
+            ctx.lineWidth = 6;
+            ctx.stroke();
+
+            // Минутная стрелка
+            const minAngle = (minutes / 60) * 2 * Math.PI - Math.PI/2;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + 0.7 * radius * Math.cos(minAngle), cy + 0.7 * radius * Math.sin(minAngle));
+            ctx.strokeStyle = 'var(--text-light)';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+
+            // Секундная стрелка
+            const secAngle = (seconds / 60) * 2 * Math.PI - Math.PI/2;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + 0.85 * radius * Math.cos(secAngle), cy + 0.85 * radius * Math.sin(secAngle));
+            ctx.strokeStyle = '#f44336';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Центральная точка
+            ctx.beginPath();
+            ctx.arc(cx, cy, 6, 0, 2 * Math.PI);
+            ctx.fillStyle = '#f44336';
+            ctx.fill();
+
+            // Цифры
+            ctx.font = 'bold 14px sans-serif';
+            ctx.fillStyle = 'var(--text)';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            for (let i = 1; i <= 12; i++) {
+                const angle = (i / 12) * 2 * Math.PI - Math.PI/2;
+                const x = cx + 0.85 * radius * Math.cos(angle);
+                const y = cy + 0.85 * radius * Math.sin(angle);
+                ctx.fillText(i.toString(), x, y);
+            }
+        }
+
+        // ================================================================
+        // 11. СПОРТИК / НЕРЯХА
+        // ================================================================
         let allEntries = [];
         let unsubscribeDays = null;
 
         function initSportik() {
             choiceBtns.forEach(btn => {
-                btn.addEventListener('click', () => setChoice(btn.dataset.choice));
+                btn.addEventListener('click', async () => {
+                    const choice = btn.dataset.choice;
+                    await setChoice(choice);
+                    const messages = {
+                        sport: 'Ты сегодня Спортик! 💪 Круто!',
+                        sloppy: 'Ты сегодня Неряха… но это можно исправить! 🧹',
+                        both: 'Ты сегодня и Спортик, и Неряха! 🤷 Баланс!',
+                        none: 'Ты сегодня ничего не выбрал. 😶 Каждый день – новый шанс!'
+                    };
+                    showToast(messages[choice] || 'Выбор сохранён!');
+                });
             });
         }
 
         function getTodayKey() {
             const d = new Date();
             return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        }
+
+        function calculateStreak(entries, status) {
+            const days = entries.map(doc => ({ id: doc.id, choice: doc.data().choice || 'none' }));
+            days.sort((a, b) => a.id.localeCompare(b.id));
+            const today = getTodayKey();
+            const todayEntry = days.find(d => d.id === today);
+            if (!todayEntry || todayEntry.choice !== status) return 0;
+            let streak = 1;
+            let currentDate = new Date(today);
+            for (let i = 1; i < 365; i++) {
+                currentDate.setDate(currentDate.getDate() - 1);
+                const key = currentDate.getFullYear() + '-' +
+                    String(currentDate.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(currentDate.getDate()).padStart(2, '0');
+                const entry = days.find(d => d.id === key);
+                if (entry && entry.choice === status) streak++;
+                else break;
+            }
+            return streak;
+        }
+
+        function renderStreak() {
+            const statuses = ['sport', 'sloppy', 'both', 'none'];
+            const labels = { sport: '🏃 Спортик', sloppy: '🧹 Неряха', both: '🤷 Оба', none: '😶 Ничего' };
+            const emojis = { sport: '🔥', sloppy: '💧', both: '⚖️', none: '😐' };
+            streakContainer.innerHTML = '';
+            statuses.forEach(status => {
+                const streak = calculateStreak(allEntries, status);
+                const div = document.createElement('div');
+                div.className = `streak-item ${status}`;
+                div.innerHTML = `<span class="emoji">${emojis[status]}</span> ${labels[status]}: <span class="count">${streak}</span> дн.`;
+                streakContainer.appendChild(div);
+            });
+        }
+
+        function renderMiniChart() {
+            const today = new Date();
+            const days = [];
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(today);
+                d.setDate(d.getDate() - i);
+                const key = d.getFullYear() + '-' +
+                    String(d.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(d.getDate()).padStart(2, '0');
+                const entry = allEntries.find(doc => doc.id === key);
+                let choice = entry ? entry.data().choice : 'none';
+                days.push({ date: key, choice, isToday: i === 0 });
+            }
+            const emojiMap = { sport: '🏃', sloppy: '🧹', both: '🤷', none: '😶' };
+            miniChart.innerHTML = days.map(d => {
+                const emoji = emojiMap[d.choice] || '😶';
+                return `<span class="day-dot${d.isToday ? ' today' : ''}">${emoji}</span>`;
+            }).join('');
         }
 
         function renderToday() {
@@ -1161,11 +1225,9 @@
             if (todayDoc) {
                 const choice = todayDoc.data().choice || 'none';
                 const emoji = choice === 'sport' ? '🏃' : choice === 'sloppy' ? '🧹' : choice === 'both' ? '🤷' : '😐';
-                const label = choice === 'sport' ? 'Спортик!' : choice === 'sloppy' ? 'Неряха!' : choice === 'both' ?
-                    'И то, и другое!' : 'Ничего...';
+                const label = choice === 'sport' ? 'Спортик!' : choice === 'sloppy' ? 'Неряха!' : choice === 'both' ? 'И то, и другое!' : 'Ничего...';
                 todayStatus.textContent = emoji + ' ' + label;
-                todaySub.textContent = choice === 'none' ? 'Ты сегодня ничего не выбрал. Но это тоже выбор!' :
-                    `Ты сегодня ${label.toLowerCase()}`;
+                todaySub.textContent = choice === 'none' ? 'Ты сегодня ничего не выбрал. Но это тоже выбор!' : `Ты сегодня ${label.toLowerCase()}`;
             } else {
                 todayStatus.textContent = '😐';
                 todaySub.textContent = 'Выбери, кем ты был сегодня';
@@ -1176,12 +1238,12 @@
                     btn.classList.add('active-' + btn.dataset.choice);
                 }
             });
+            renderStreak();
+            renderMiniChart();
         }
 
         function renderStats() {
-            let sport = 0,
-                sloppy = 0,
-                both = 0;
+            let sport = 0, sloppy = 0, both = 0;
             allEntries.forEach(doc => {
                 const c = doc.data().choice || 'none';
                 if (c === 'sport') sport++;
@@ -1221,7 +1283,9 @@
             });
         }
 
-        // Дни недели
+        // ================================================================
+        // 12. ДНИ НЕДЕЛИ
+        // ================================================================
         const weekdays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
 
         function initWeekdays() {
@@ -1271,13 +1335,18 @@
             }).catch(e => console.warn('Не удалось загрузить заметки:', e));
         }
 
-        // Крестики-нолики
+        // ================================================================
+        // 13. КРЕСТИКИ-НОЛИКИ с сохранением побед/поражений
+        // ================================================================
         let board = ['', '', '', '', '', '', '', '', ''];
         let currentPlayer = 'X';
         let gameOver = false;
+        let tttWinsCount = 0;
+        let tttLossesCount = 0;
 
         function initTTT() {
             tttReset.addEventListener('click', resetTTT);
+            loadTTTScores();
             renderTTT();
         }
 
@@ -1292,24 +1361,15 @@
                 div.addEventListener('click', () => handleTTTClick(idx));
                 tttGrid.appendChild(div);
             });
+            tttWins.textContent = tttWinsCount;
+            tttLosses.textContent = tttLossesCount;
         }
 
         function checkWinner(board) {
-            const lines = [
-                [0, 1, 2],
-                [3, 4, 5],
-                [6, 7, 8],
-                [0, 3, 6],
-                [1, 4, 7],
-                [2, 5, 8],
-                [0, 4, 8],
-                [2, 4, 6]
-            ];
+            const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
             for (let line of lines) {
-                const [a, b, c] = line;
-                if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-                    return board[a];
-                }
+                const [a,b,c] = line;
+                if (board[a] && board[a] === board[b] && board[a] === board[c]) return board[a];
             }
             if (board.every(cell => cell !== '')) return 'draw';
             return null;
@@ -1324,7 +1384,12 @@
             const winner = checkWinner(board);
             if (winner) {
                 gameOver = true;
-                tttStatus.textContent = winner === 'draw' ? 'Ничья!' : 'Ты выиграл! 🎉';
+                if (winner === 'X') { tttWinsCount++; showToast('Ты выиграл! 🎉'); }
+                else if (winner === 'O') { tttLossesCount++; showToast('ПК выиграл! 😢'); }
+                else { showToast('Ничья!'); }
+                saveTTTScores();
+                tttStatus.textContent = winner === 'draw' ? 'Ничья!' : winner === 'X' ? 'Ты выиграл! 🎉' : 'ПК выиграл! 😢';
+                renderTTT();
                 return;
             }
             currentPlayer = 'O';
@@ -1339,7 +1404,12 @@
                 const winner = checkWinner(board);
                 if (winner) {
                     gameOver = true;
-                    tttStatus.textContent = winner === 'draw' ? 'Ничья!' : 'Ты выиграл! 🎉';
+                    if (winner === 'X') { tttWinsCount++; showToast('Ты выиграл! 🎉'); }
+                    else if (winner === 'O') { tttLossesCount++; showToast('ПК выиграл! 😢'); }
+                    else showToast('Ничья!');
+                    saveTTTScores();
+                    tttStatus.textContent = winner === 'draw' ? 'Ничья!' : winner === 'X' ? 'Ты выиграл! 🎉' : 'ПК выиграл! 😢';
+                    renderTTT();
                 }
                 return;
             }
@@ -1348,7 +1418,12 @@
             const winner = checkWinner(board);
             if (winner) {
                 gameOver = true;
-                tttStatus.textContent = winner === 'draw' ? 'Ничья!' : 'ПК выиграл! 😢';
+                if (winner === 'X') { tttWinsCount++; showToast('Ты выиграл! 🎉'); }
+                else if (winner === 'O') { tttLossesCount++; showToast('ПК выиграл! 😢'); }
+                else showToast('Ничья!');
+                saveTTTScores();
+                tttStatus.textContent = winner === 'draw' ? 'Ничья!' : winner === 'X' ? 'Ты выиграл! 🎉' : 'ПК выиграл! 😢';
+                renderTTT();
                 return;
             }
             currentPlayer = 'X';
@@ -1359,24 +1434,18 @@
             for (let i = 0; i < 9; i++) {
                 if (board[i] === '') {
                     board[i] = 'O';
-                    if (checkWinner(board) === 'O') {
-                        board[i] = '';
-                        return i;
-                    }
+                    if (checkWinner(board) === 'O') { board[i] = ''; return i; }
                     board[i] = '';
                 }
             }
             for (let i = 0; i < 9; i++) {
                 if (board[i] === '') {
                     board[i] = 'X';
-                    if (checkWinner(board) === 'X') {
-                        board[i] = '';
-                        return i;
-                    }
+                    if (checkWinner(board) === 'X') { board[i] = ''; return i; }
                     board[i] = '';
                 }
             }
-            const empty = board.map((v, i) => v === '' ? i : null).filter(v => v !== null);
+            const empty = board.map((v,i) => v === '' ? i : null).filter(v => v !== null);
             if (empty.length === 0) return -1;
             return empty[Math.floor(Math.random() * empty.length)];
         }
@@ -1389,7 +1458,194 @@
             renderTTT();
         }
 
-        // Курсы валют
+        function loadTTTScores() {
+            if (!currentUser) return;
+            db.collection('users').doc(currentUser.uid).get().then(doc => {
+                if (doc.exists) {
+                    if (doc.data().tttWins) tttWinsCount = doc.data().tttWins;
+                    if (doc.data().tttLosses) tttLossesCount = doc.data().tttLosses;
+                    renderTTT();
+                }
+            }).catch(e => console.warn('Не удалось загрузить счёты TTT:', e));
+        }
+
+        function saveTTTScores() {
+            if (!currentUser) return;
+            db.collection('users').doc(currentUser.uid).set({ tttWins: tttWinsCount, tttLosses: tttLossesCount }, { merge: true })
+                .catch(e => console.warn('Ошибка сохранения счётов TTT:', e));
+        }
+
+        // ================================================================
+        // 14. ЗМЕЙКА
+        // ================================================================
+        let snake = [];
+        let direction = 'RIGHT';
+        let nextDirection = 'RIGHT';
+        let food = { x: 0, y: 0 };
+        let snakeScoreValue = 0;
+        let snakeGameRunning = false;
+        let snakePaused = false;
+        let snakeInterval = null;
+
+        function initSnake() {
+            snakeStartBtn.addEventListener('click', startSnake);
+            snakePauseBtn.addEventListener('click', togglePauseSnake);
+            snakeResetBtn.addEventListener('click', resetSnake);
+            document.addEventListener('keydown', (e) => {
+                if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                    e.preventDefault();
+                    if (!snakeGameRunning) return;
+                    const dirs = {
+                        'ArrowUp': 'UP',
+                        'ArrowDown': 'DOWN',
+                        'ArrowLeft': 'LEFT',
+                        'ArrowRight': 'RIGHT'
+                    };
+                    const newDir = dirs[e.key];
+                    if ((direction === 'UP' && newDir === 'DOWN') ||
+                        (direction === 'DOWN' && newDir === 'UP') ||
+                        (direction === 'LEFT' && newDir === 'RIGHT') ||
+                        (direction === 'RIGHT' && newDir === 'LEFT')) {
+                        return;
+                    }
+                    nextDirection = newDir;
+                }
+            });
+            resetSnake();
+        }
+
+        function startSnake() {
+            if (snakeGameRunning && !snakePaused) return;
+            if (snakePaused) {
+                snakePaused = false;
+                snakePauseBtn.textContent = '⏸ Пауза';
+                snakeInterval = setInterval(updateSnake, 150);
+                return;
+            }
+            resetSnake();
+            snakeGameRunning = true;
+            snakePaused = false;
+            snakePauseBtn.textContent = '⏸ Пауза';
+            snakeInterval = setInterval(updateSnake, 150);
+        }
+
+        function togglePauseSnake() {
+            if (!snakeGameRunning) return;
+            snakePaused = !snakePaused;
+            if (snakePaused) {
+                clearInterval(snakeInterval);
+                snakePauseBtn.textContent = '▶ Продолжить';
+            } else {
+                snakePauseBtn.textContent = '⏸ Пауза';
+                snakeInterval = setInterval(updateSnake, 150);
+            }
+        }
+
+        function resetSnake() {
+            clearInterval(snakeInterval);
+            snakeGameRunning = false;
+            snakePaused = false;
+            snakePauseBtn.textContent = '⏸ Пауза';
+            snake = [{x: 10, y: 10}];
+            direction = 'RIGHT';
+            nextDirection = 'RIGHT';
+            snakeScoreValue = 0;
+            snakeScore.textContent = '0';
+            generateSnakeFood();
+            drawSnake();
+        }
+
+        function generateSnakeFood() {
+            const size = 20;
+            const max = 19;
+            let pos;
+            do {
+                pos = { x: Math.floor(Math.random() * (max+1)), y: Math.floor(Math.random() * (max+1)) };
+            } while (snake.some(seg => seg.x === pos.x && seg.y === pos.y));
+            food = pos;
+        }
+
+        function updateSnake() {
+            if (!snakeGameRunning || snakePaused) return;
+            direction = nextDirection;
+            const head = { ...snake[0] };
+            switch (direction) {
+                case 'UP': head.y--; break;
+                case 'DOWN': head.y++; break;
+                case 'LEFT': head.x--; break;
+                case 'RIGHT': head.x++; break;
+            }
+            // Проверка столкновения со стенами
+            if (head.x < 0 || head.x > 19 || head.y < 0 || head.y > 19) {
+                gameOverSnake();
+                return;
+            }
+            // Проверка столкновения с собой
+            if (snake.some(seg => seg.x === head.x && seg.y === head.y)) {
+                gameOverSnake();
+                return;
+            }
+            snake.unshift(head);
+            // Еда
+            if (head.x === food.x && head.y === food.y) {
+                snakeScoreValue++;
+                snakeScore.textContent = snakeScoreValue;
+                generateSnakeFood();
+            } else {
+                snake.pop();
+            }
+            drawSnake();
+        }
+
+        function gameOverSnake() {
+            clearInterval(snakeInterval);
+            snakeGameRunning = false;
+            showToast('Игра окончена! Очки: ' + snakeScoreValue);
+            // Сохраняем рекорд (можно в Firestore)
+            if (currentUser) {
+                db.collection('users').doc(currentUser.uid).set({ snakeHighScore: snakeScoreValue }, { merge: true })
+                    .catch(e => console.warn('Ошибка сохранения рекорда змейки:', e));
+            }
+        }
+
+        function drawSnake() {
+            const canvas = document.getElementById('snakeCanvas');
+            const ctx = canvas.getContext('2d');
+            const size = 15;
+            const offset = 5;
+            ctx.clearRect(0, 0, 300, 300);
+            // Рисуем сетку (опционально)
+            ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i <= 20; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i*size+offset, offset);
+                ctx.lineTo(i*size+offset, 300-offset);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(offset, i*size+offset);
+                ctx.lineTo(300-offset, i*size+offset);
+                ctx.stroke();
+            }
+            // Змея
+            snake.forEach((seg, idx) => {
+                const x = seg.x * size + offset;
+                const y = seg.y * size + offset;
+                ctx.fillStyle = idx === 0 ? '#4caf50' : '#81c784';
+                ctx.fillRect(x, y, size-2, size-2);
+            });
+            // Еда
+            const fx = food.x * size + offset;
+            const fy = food.y * size + offset;
+            ctx.fillStyle = '#f44336';
+            ctx.beginPath();
+            ctx.arc(fx + size/2, fy + size/2, size/2-2, 0, 2*Math.PI);
+            ctx.fill();
+        }
+
+        // ================================================================
+        // 15. КУРСЫ ВАЛЮТ
+        // ================================================================
         function initCurrency() {
             fetchRates();
             setInterval(fetchRates, 60000);
@@ -1413,7 +1669,9 @@
             }
         }
 
-        // Время столиц
+        // ================================================================
+        // 16. ВРЕМЯ СТОЛИЦ
+        // ================================================================
         const cities = [
             { name: 'Москва', tz: 'Europe/Moscow' },
             { name: 'Нью-Йорк', tz: 'America/New_York' },
@@ -1440,7 +1698,9 @@
             });
         }
 
-        // Цитата
+        // ================================================================
+        // 17. ЦИТАТА
+        // ================================================================
         const quotes = [
             { text: 'Будь спортиком, а не неряхой!', author: '— Денис' },
             { text: 'Сегодня ты — легенда! Завтра тоже.', author: '— Денис' },
@@ -1459,7 +1719,9 @@
             quoteBox.innerHTML = `«${q.text}»<div class="author">${q.author}</div>`;
         }
 
-        // Сброс
+        // ================================================================
+        // 18. СБРОС ВСЕХ ДНЕЙ
+        // ================================================================
         function initReset() {
             resetBtn.addEventListener('click', resetAllDays);
         }
@@ -1472,13 +1734,51 @@
                 const batch = db.batch();
                 snapshot.forEach(doc => batch.delete(doc.ref));
                 await batch.commit();
+                showToast('Все дни сброшены');
             } catch (e) {
                 alert('Ошибка сброса: ' + e.message);
             }
         }
 
         // ================================================================
-        // 6. АВТОРИЗАЦИЯ
+        // 19. ТЕМА (светлая/тёмная)
+        // ================================================================
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-theme');
+                document.getElementById('themeToggle').textContent = '🌞';
+            }
+            document.getElementById('themeToggle').addEventListener('click', () => {
+                document.body.classList.toggle('light-theme');
+                const isLight = document.body.classList.contains('light-theme');
+                localStorage.setItem('theme', isLight ? 'light' : 'dark');
+                document.getElementById('themeToggle').textContent = isLight ? '🌞' : '🌓';
+            });
+        }
+
+        // ================================================================
+        // 20. ОСТАНОВКА ВСЕХ СЧЁТЧИКОВ (при выходе или сбросе)
+        // ================================================================
+        function stopAllCounters() {
+            if (savingsInterval) clearInterval(savingsInterval);
+            if (masturbationInterval) clearInterval(masturbationInterval);
+            if (dotaInterval) clearInterval(dotaInterval);
+            if (bgWordsInterval) clearInterval(bgWordsInterval);
+            if (snakeInterval) clearInterval(snakeInterval);
+        }
+
+        function startAllCounters() {
+            // Все счётчики уже запущены в init-функциях
+            // Но если они остановлены, перезапускаем
+            if (!savingsInterval) startSavingsCounter();
+            if (!masturbationInterval) startMasturbationCounter();
+            if (!dotaInterval) startDotaCounter();
+            if (!bgWordsInterval) initBgWords();
+        }
+
+        // ================================================================
+        // 21. АВТОРИЗАЦИЯ
         // ================================================================
         const authSection = document.getElementById('authSection');
         const authTitle = document.getElementById('authTitle');
@@ -1518,18 +1818,13 @@
 
         logoutBtn.addEventListener('click', async () => {
             await auth.signOut();
-            if (unsubscribeDays) { unsubscribeDays();
-                unsubscribeDays = null; }
+            if (unsubscribeDays) { unsubscribeDays(); unsubscribeDays = null; }
             allEntries = [];
             renderAll();
-            if (savingsRunning) startStopSavings();
-            if (savingsInterval) clearInterval(savingsInterval);
-            savingsRunning = false;
-            startStopBtn.textContent = '▶ Старт';
-            startStopBtn.classList.remove('btn-danger');
-            startStopBtn.classList.add('btn-success');
+            stopAllCounters();
             const panel = document.getElementById('mainPanel');
             panel.classList.add('hidden');
+            gameOverlay.classList.add('hidden');
         });
 
         auth.onAuthStateChanged((user) => {
@@ -1543,11 +1838,16 @@
                     const panel = document.getElementById('mainPanel');
                     panel.classList.remove('hidden');
                     buildMainPanel();
+                    // Загружаем все данные из Firestore
                     loadSavingsFromFirebase();
                     loadDotaFromFirebase();
+                    loadMasturbationCount();
                     loadMasturbationState();
                     loadWeekNotes();
+                    loadTTTScores();
                     subscribeToDays(user);
+                    // Фоновые слова
+                    initBgWords();
                 } else {
                     resetGame();
                 }
@@ -1556,28 +1856,20 @@
                 authSection.style.display = 'block';
                 const panel = document.getElementById('mainPanel');
                 panel.classList.add('hidden');
-                if (unsubscribeDays) { unsubscribeDays();
-                    unsubscribeDays = null; }
+                if (unsubscribeDays) { unsubscribeDays(); unsubscribeDays = null; }
                 allEntries = [];
                 renderAll();
-                if (savingsRunning) startStopSavings();
-                if (savingsInterval) clearInterval(savingsInterval);
-                savingsRunning = false;
-                startStopBtn.textContent = '▶ Старт';
-                startStopBtn.classList.remove('btn-danger');
-                startStopBtn.classList.add('btn-success');
+                stopAllCounters();
                 gameOverlay.classList.add('hidden');
             }
         });
 
         // ================================================================
-        // 7. СТАРТ
+        // 22. СТАРТ
         // ================================================================
-        // Инициализация игры при первом запуске
         renderSocks();
         updateSockProgress();
-
-        console.log('Приложение готово.');
+        console.log('Приложение готово!');
     </script>
 </body>
 </html>
