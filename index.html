@@ -723,9 +723,7 @@
         </div>
 
         <!-- ОСНОВНОЙ ИНТЕРФЕЙС (показывается после авторизации и игры) -->
-        <div id="mainPanel" class="main-panel hidden">
-            <!-- все карточки будут внутри -->
-        </div>
+        <div id="mainPanel" class="main-panel hidden"></div>
     </div>
 
     <script>
@@ -805,13 +803,8 @@
                     gameOverlay.classList.add('hidden');
                     const mainPanel = document.getElementById('mainPanel');
                     mainPanel.classList.remove('hidden');
-                    // Заполняем mainPanel карточками, если они ещё не добавлены (добавим при первом показе)
-                    if (!mainPanel.hasChildNodes()) {
-                        buildMainPanel();
-                    }
-                    if (!savingsRunning) {
-                        // Не запускаем автоматически, пусть пользователь нажмёт Старт
-                    }
+                    // Всегда перестраиваем панель, чтобы гарантировать наличие карточек
+                    buildMainPanel();
                 }, 1200);
             }
         }
@@ -944,7 +937,6 @@
             panel.innerHTML = cardsHTML;
 
             // После вставки нужно переинициализировать все обработчики и ссылки на элементы
-            // Это сделаем отдельной функцией initAfterBuild()
             initAfterBuild();
         }
 
@@ -991,9 +983,7 @@
             // Сброс
             window.resetBtn = document.getElementById('resetBtn');
 
-            // Перепривязываем события (они уже определены в глобальных функциях)
-            // Но так как мы пересоздали элементы, нужно заново навесить обработчики.
-            // Проще всего вызвать функции инициализации заново.
+            // Перепривязываем события
             initSavings();
             initMasturbation();
             initDota();
@@ -1015,8 +1005,6 @@
         let ratePerSecond = 5;
 
         function initSavings() {
-            // Загрузка данных из Firebase будет позже
-            // Навешиваем события
             setRateBtn.addEventListener('click', () => {
                 const val = parseFloat(rateInput.value);
                 if (val && val > 0) {
@@ -1159,7 +1147,7 @@
             choiceBtns.forEach(btn => {
                 btn.addEventListener('click', () => setChoice(btn.dataset.choice));
             });
-            // Остальное загрузится через подписку
+            // Данные загружаются через подписку
         }
 
         function getTodayKey() {
@@ -1547,60 +1535,50 @@
         });
 
         auth.onAuthStateChanged((user) => {
-    if (user) {
-        currentUser = user;
-        userEmailSpan.textContent = user.email;
-        authSection.style.display = 'none';
-        const gameCompletedFlag = localStorage.getItem('gameCompleted_' + user.uid);
-        if (gameCompletedFlag === 'true') {
-            gameOverlay.classList.add('hidden');
-            const panel = document.getElementById('mainPanel');
-            panel.classList.remove('hidden');
-            buildMainPanel();
-            loadSavingsFromFirebase();
-            loadDotaFromFirebase();
-            loadMasturbationState();
-            loadWeekNotes();
-            subscribeToDays(user);
-        } else {
-            resetGame();
-        }
-    } else {
-        currentUser = null;
-        authSection.style.display = 'block';
-        const panel = document.getElementById('mainPanel');
-        panel.classList.add('hidden');
-        if (unsubscribeDays) { unsubscribeDays(); unsubscribeDays = null; }
-        allEntries = [];
-        renderAll();
-        if (savingsRunning) startStopSavings();
-        if (savingsInterval) clearInterval(savingsInterval);
-        savingsRunning = false;
-        startStopBtn.textContent = '? �����';
-        startStopBtn.classList.remove('btn-danger');
-        startStopBtn.classList.add('btn-success');
-        gameOverlay.classList.add('hidden');
-    }
-});
-
-        function initAllAfterAuth() {
-            // Все инициализации уже выполнены через buildMainPanel -> initAfterBuild
-            // но для верности вызовем ещё раз
-            // На самом деле мы уже вызвали initAfterBuild() внутри buildMainPanel.
-            // Просто убедимся, что всё подвязано.
-            if (document.getElementById('savingsDisplay')) {
-                // уже есть
+            if (user) {
+                currentUser = user;
+                userEmailSpan.textContent = user.email;
+                authSection.style.display = 'none';
+                const gameCompletedFlag = localStorage.getItem('gameCompleted_' + user.uid);
+                if (gameCompletedFlag === 'true') {
+                    gameOverlay.classList.add('hidden');
+                    const panel = document.getElementById('mainPanel');
+                    panel.classList.remove('hidden');
+                    // Всегда перестраиваем панель, чтобы гарантировать наличие элементов
+                    buildMainPanel();
+                    // Загружаем данные
+                    loadSavingsFromFirebase();
+                    loadDotaFromFirebase();
+                    loadMasturbationState();
+                    loadWeekNotes();
+                    subscribeToDays(user);
+                } else {
+                    resetGame();
+                }
+            } else {
+                currentUser = null;
+                authSection.style.display = 'block';
+                const panel = document.getElementById('mainPanel');
+                panel.classList.add('hidden');
+                if (unsubscribeDays) { unsubscribeDays();
+                    unsubscribeDays = null; }
+                allEntries = [];
+                renderAll();
+                if (savingsRunning) startStopSavings();
+                if (savingsInterval) clearInterval(savingsInterval);
+                savingsRunning = false;
+                startStopBtn.textContent = '▶ Старт';
+                startStopBtn.classList.remove('btn-danger');
+                startStopBtn.classList.add('btn-success');
+                gameOverlay.classList.add('hidden');
             }
-        }
+        });
 
         // ================================================================
         // 7. СТАРТ
         // ================================================================
         // При первом запуске показываем авторизацию
-        // Игру показываем только после входа
         // Если пользователь уже авторизован, auth.onAuthStateChanged сработает сразу.
-
-        // Чтобы не было пустого экрана, показываем заглушку
         console.log('Приложение готово.');
     </script>
 </body>
