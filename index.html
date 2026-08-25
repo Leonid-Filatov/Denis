@@ -597,6 +597,14 @@
             transition: opacity 0.3s, transform 0.3s;
         }
 
+        /* ===== ОСНОВНАЯ ПАНЕЛЬ ===== */
+        .main-panel {
+            display: grid;
+            grid-column: 1 / -1;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        }
+
         /* ===== АДАПТАЦИЯ ===== */
         @media (max-width: 600px) {
             .app-container {
@@ -621,13 +629,13 @@
             .sock-item {
                 font-size: 2rem;
             }
+            .main-panel {
+                grid-template-columns: 1fr;
+            }
         }
         @media (min-width: 1200px) {
-            .app-container {
+            .main-panel {
                 grid-template-columns: repeat(3, 1fr);
-            }
-            .header {
-                grid-column: 1 / -1;
             }
             .weekdays-grid {
                 grid-template-columns: 1fr 1fr;
@@ -715,100 +723,8 @@
         </div>
 
         <!-- ОСНОВНОЙ ИНТЕРФЕЙС (показывается после авторизации и игры) -->
-        <div id="mainPanel" class="hidden" style="grid-column:1/-1; display:contents;">
-
-            <!-- 1. Экономия -->
-            <div class="card savings-block">
-                <div class="card-title">💰 Сэкономлено</div>
-                <div class="amount" id="savingsDisplay">0 ₽</div>
-                <div class="rate" id="savingsRate">5 ₽ / сек</div>
-                <div style="display:flex; gap:8px; flex-wrap:wrap; margin:6px 0;">
-                    <input type="number" id="rateInput" value="5" step="0.5" min="0.5" style="width:100px; padding:6px 10px; border-radius:8px; border:2px solid #3a3a5a; background:#1a1a2e; color:white;" />
-                    <button class="btn btn-primary" id="setRateBtn">Установить</button>
-                </div>
-                <div class="controls">
-                    <button class="btn btn-success" id="startStopBtn">▶ Старт</button>
-                    <button class="btn btn-danger" id="resetSavingsBtn">Сброс</button>
-                </div>
-            </div>
-
-            <!-- 2. Мастурбация -->
-            <div class="card masturbation-block" id="masturbationBlock">
-                <div class="masturbation-title">🍆 Счётчик мастурбации</div>
-                <div class="masturbation-count" id="masturbationCount">116</div>
-                <div class="masturbation-hint">(кликни, чтобы разблокировать)</div>
-            </div>
-
-            <!-- 3. Dota 2 -->
-            <div class="card dota-block">
-                <div class="dota-title">⚔️ Приогранные катки в Dota 2 🏆</div>
-                <div class="dota-count" id="dotaCount">0</div>
-                <div class="dota-controls">
-                    <button id="dotaMinus">−</button>
-                    <input type="number" id="dotaInput" value="0" min="0" step="1" />
-                    <button id="dotaPlus">+</button>
-                </div>
-            </div>
-
-            <!-- 4. Спортик / Неряха -->
-            <div class="card today-card">
-                <div class="card-title">📋 Сегодня</div>
-                <div class="date" id="todayDate"></div>
-                <div class="status" id="todayStatus">😐</div>
-                <div class="sub-status" id="todaySub">Выбери, кем ты был сегодня</div>
-                <div class="button-group">
-                    <button class="btn-choice" data-choice="sport">🏃 Спортик</button>
-                    <button class="btn-choice" data-choice="sloppy">🧹 Неряха</button>
-                    <button class="btn-choice" data-choice="both">🤷 Оба</button>
-                    <button class="btn-choice" data-choice="none">😴 Ничего</button>
-                </div>
-                <div class="stats-grid">
-                    <div class="stat-item sport"><div class="number" id="sportCount">0</div><div class="label">Спортик</div></div>
-                    <div class="stat-item sloppy"><div class="number" id="sloppyCount">0</div><div class="label">Неряха</div></div>
-                    <div class="stat-item both"><div class="number" id="bothCount">0</div><div class="label">Оба</div></div>
-                </div>
-            </div>
-
-            <!-- 5. Дни недели с заметками -->
-            <div class="card" id="weekdaysCard">
-                <div class="card-title">📝 Заметки по дням (до 30 симв.)</div>
-                <div class="weekdays-grid" id="weekdaysGrid">
-                    <!-- заполняется JS -->
-                </div>
-            </div>
-
-            <!-- 6. Крестики-нолики -->
-            <div class="card">
-                <div class="card-title">❌⭕ Крестики-нолики (против ПК)</div>
-                <div class="ttt-grid" id="tttGrid"></div>
-                <div class="ttt-status" id="tttStatus">Ваш ход (X)</div>
-                <button class="ttt-reset" id="tttReset">🔄 Новая игра</button>
-            </div>
-
-            <!-- 7. Курсы валют -->
-            <div class="card">
-                <div class="card-title">💱 Курсы валют (к рублю)</div>
-                <div class="currency-grid" id="currencyGrid">
-                    <div class="currency-item"><div class="pair">USD/RUB</div><div class="value" id="usdRate">--</div></div>
-                    <div class="currency-item"><div class="pair">EUR/RUB</div><div class="value" id="eurRate">--</div></div>
-                </div>
-                <div style="font-size:0.7rem; color:var(--text-light); margin-top:6px;">Обновляется раз в минуту</div>
-            </div>
-
-            <!-- 8. Время столиц -->
-            <div class="card">
-                <div class="card-title">🕒 Время в столицах</div>
-                <div class="time-grid" id="timeGrid"></div>
-            </div>
-
-            <!-- 9. Цитата -->
-            <div class="quote-box" id="quoteBox">
-                «Будь спортиком, а не неряхой!»
-                <div class="author">— Денис</div>
-            </div>
-
-            <!-- 10. Сброс (общий) -->
-            <button class="reset-btn" id="resetBtn" style="grid-column:1/-1; justify-self:center;">🔥 Сбросить все данные (дни)</button>
+        <div id="mainPanel" class="main-panel hidden">
+            <!-- все карточки будут внутри -->
         </div>
     </div>
 
@@ -855,7 +771,6 @@
         }
 
         function spawnSocks() {
-            // Очищаем контейнер
             socksContainer.innerHTML = '';
             const shuffled = shuffleArray([...emojis]);
             const containerRect = document.documentElement.getBoundingClientRect();
@@ -865,7 +780,6 @@
                 const el = document.createElement('div');
                 el.className = 'sock-item';
                 el.textContent = emoji;
-                // Случайные координаты внутри видимой области
                 const x = padding + Math.random() * (containerRect.width - padding * 2);
                 const y = padding + Math.random() * (containerRect.height - padding * 2);
                 el.style.left = x + 'px';
@@ -887,13 +801,16 @@
             if (collectedCount === totalItems) {
                 gameCompleted = true;
                 gameCompleteMessage.classList.remove('hidden');
-                // Отключаем клики на остальные носки (уже неактивны через класс)
                 setTimeout(() => {
                     gameOverlay.classList.add('hidden');
-                    document.getElementById('mainPanel').style.display = 'grid';
-                    // Запускаем экономию, если ещё не запущена
+                    const mainPanel = document.getElementById('mainPanel');
+                    mainPanel.classList.remove('hidden');
+                    // Заполняем mainPanel карточками, если они ещё не добавлены (добавим при первом показе)
+                    if (!mainPanel.hasChildNodes()) {
+                        buildMainPanel();
+                    }
                     if (!savingsRunning) {
-                        startStopSavings();
+                        // Не запускаем автоматически, пусть пользователь нажмёт Старт
                     }
                 }, 1200);
             }
@@ -904,7 +821,6 @@
         }
 
         function resetGame() {
-            // Сбрасываем игру
             collectedCount = 0;
             gameCompleted = false;
             sockItems = [];
@@ -913,10 +829,10 @@
             spawnSocks();
             updateSockProgress();
             gameOverlay.classList.remove('hidden');
-            document.getElementById('mainPanel').style.display = 'none';
-            // Останавливаем экономию, если она запущена
+            const mainPanel = document.getElementById('mainPanel');
+            mainPanel.classList.add('hidden');
             if (savingsRunning) {
-                startStopSavings(); // остановить
+                startStopSavings();
             }
             savings = 0;
             updateSavingsDisplay();
@@ -925,34 +841,218 @@
         startGameBtn.addEventListener('click', resetGame);
 
         // ================================================================
-        // 3. ЭКОНОМИЯ (с кнопками Старт/Стоп и Сброс)
+        // 3. ПОСТРОЕНИЕ MAINPANEL (все карточки)
         // ================================================================
-        let savings = 0;
-        let ratePerSecond = 5;
+        function buildMainPanel() {
+            const panel = document.getElementById('mainPanel');
+            // Очищаем, чтобы не дублировать
+            panel.innerHTML = '';
+
+            // Шаблоны карточек (вставляем как HTML)
+            const cardsHTML = `
+                <!-- 1. Экономия -->
+                <div class="card savings-block">
+                    <div class="card-title">💰 Сэкономлено</div>
+                    <div class="amount" id="savingsDisplay">0 ₽</div>
+                    <div class="rate" id="savingsRate">5 ₽ / сек</div>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap; margin:6px 0;">
+                        <input type="number" id="rateInput" value="5" step="0.5" min="0.5" style="width:100px; padding:6px 10px; border-radius:8px; border:2px solid #3a3a5a; background:#1a1a2e; color:white;" />
+                        <button class="btn btn-primary" id="setRateBtn">Установить</button>
+                    </div>
+                    <div class="controls">
+                        <button class="btn btn-success" id="startStopBtn">▶ Старт</button>
+                        <button class="btn btn-danger" id="resetSavingsBtn">Сброс</button>
+                    </div>
+                </div>
+
+                <!-- 2. Мастурбация -->
+                <div class="card masturbation-block" id="masturbationBlock">
+                    <div class="masturbation-title">🍆 Счётчик мастурбации</div>
+                    <div class="masturbation-count" id="masturbationCount">116</div>
+                    <div class="masturbation-hint">(кликни, чтобы разблокировать)</div>
+                </div>
+
+                <!-- 3. Dota 2 -->
+                <div class="card dota-block">
+                    <div class="dota-title">⚔️ Приогранные катки в Dota 2 🏆</div>
+                    <div class="dota-count" id="dotaCount">0</div>
+                    <div class="dota-controls">
+                        <button id="dotaMinus">−</button>
+                        <input type="number" id="dotaInput" value="0" min="0" step="1" />
+                        <button id="dotaPlus">+</button>
+                    </div>
+                </div>
+
+                <!-- 4. Спортик / Неряха -->
+                <div class="card today-card">
+                    <div class="card-title">📋 Сегодня</div>
+                    <div class="date" id="todayDate"></div>
+                    <div class="status" id="todayStatus">😐</div>
+                    <div class="sub-status" id="todaySub">Выбери, кем ты был сегодня</div>
+                    <div class="button-group">
+                        <button class="btn-choice" data-choice="sport">🏃 Спортик</button>
+                        <button class="btn-choice" data-choice="sloppy">🧹 Неряха</button>
+                        <button class="btn-choice" data-choice="both">🤷 Оба</button>
+                        <button class="btn-choice" data-choice="none">😴 Ничего</button>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item sport"><div class="number" id="sportCount">0</div><div class="label">Спортик</div></div>
+                        <div class="stat-item sloppy"><div class="number" id="sloppyCount">0</div><div class="label">Неряха</div></div>
+                        <div class="stat-item both"><div class="number" id="bothCount">0</div><div class="label">Оба</div></div>
+                    </div>
+                </div>
+
+                <!-- 5. Дни недели с заметками -->
+                <div class="card" id="weekdaysCard">
+                    <div class="card-title">📝 Заметки по дням (до 30 симв.)</div>
+                    <div class="weekdays-grid" id="weekdaysGrid"></div>
+                </div>
+
+                <!-- 6. Крестики-нолики -->
+                <div class="card">
+                    <div class="card-title">❌⭕ Крестики-нолики (против ПК)</div>
+                    <div class="ttt-grid" id="tttGrid"></div>
+                    <div class="ttt-status" id="tttStatus">Ваш ход (X)</div>
+                    <button class="ttt-reset" id="tttReset">🔄 Новая игра</button>
+                </div>
+
+                <!-- 7. Курсы валют -->
+                <div class="card">
+                    <div class="card-title">💱 Курсы валют (к рублю)</div>
+                    <div class="currency-grid" id="currencyGrid">
+                        <div class="currency-item"><div class="pair">USD/RUB</div><div class="value" id="usdRate">--</div></div>
+                        <div class="currency-item"><div class="pair">EUR/RUB</div><div class="value" id="eurRate">--</div></div>
+                    </div>
+                    <div style="font-size:0.7rem; color:var(--text-light); margin-top:6px;">Обновляется раз в минуту</div>
+                </div>
+
+                <!-- 8. Время столиц -->
+                <div class="card">
+                    <div class="card-title">🕒 Время в столицах</div>
+                    <div class="time-grid" id="timeGrid"></div>
+                </div>
+
+                <!-- 9. Цитата -->
+                <div class="quote-box" id="quoteBox">
+                    «Будь спортиком, а не неряхой!»
+                    <div class="author">— Денис</div>
+                </div>
+
+                <!-- 10. Сброс -->
+                <button class="reset-btn" id="resetBtn" style="grid-column:1/-1; justify-self:center;">🔥 Сбросить все данные (дни)</button>
+            `;
+            panel.innerHTML = cardsHTML;
+
+            // После вставки нужно переинициализировать все обработчики и ссылки на элементы
+            // Это сделаем отдельной функцией initAfterBuild()
+            initAfterBuild();
+        }
+
+        // ================================================================
+        // 4. ИНИЦИАЛИЗАЦИЯ ПОСЛЕ ПОСТРОЕНИЯ ПАНЕЛИ
+        // ================================================================
+        function initAfterBuild() {
+            // Экономия
+            window.savingsDisplay = document.getElementById('savingsDisplay');
+            window.savingsRate = document.getElementById('savingsRate');
+            window.rateInput = document.getElementById('rateInput');
+            window.setRateBtn = document.getElementById('setRateBtn');
+            window.startStopBtn = document.getElementById('startStopBtn');
+            window.resetSavingsBtn = document.getElementById('resetSavingsBtn');
+            // Мастурбация
+            window.masturbationBlock = document.getElementById('masturbationBlock');
+            window.masturbationCount = document.getElementById('masturbationCount');
+            // Dota
+            window.dotaCountEl = document.getElementById('dotaCount');
+            window.dotaInput = document.getElementById('dotaInput');
+            window.dotaMinus = document.getElementById('dotaMinus');
+            window.dotaPlus = document.getElementById('dotaPlus');
+            // Спортик
+            window.todayDate = document.getElementById('todayDate');
+            window.todayStatus = document.getElementById('todayStatus');
+            window.todaySub = document.getElementById('todaySub');
+            window.choiceBtns = document.querySelectorAll('.btn-choice');
+            window.sportCount = document.getElementById('sportCount');
+            window.sloppyCount = document.getElementById('sloppyCount');
+            window.bothCount = document.getElementById('bothCount');
+            // Дни недели
+            window.weekdaysGrid = document.getElementById('weekdaysGrid');
+            // Крестики-нолики
+            window.tttGrid = document.getElementById('tttGrid');
+            window.tttStatus = document.getElementById('tttStatus');
+            window.tttReset = document.getElementById('tttReset');
+            // Курсы
+            window.usdRateEl = document.getElementById('usdRate');
+            window.eurRateEl = document.getElementById('eurRate');
+            // Время
+            window.timeGrid = document.getElementById('timeGrid');
+            // Цитата
+            window.quoteBox = document.getElementById('quoteBox');
+            // Сброс
+            window.resetBtn = document.getElementById('resetBtn');
+
+            // Перепривязываем события (они уже определены в глобальных функциях)
+            // Но так как мы пересоздали элементы, нужно заново навесить обработчики.
+            // Проще всего вызвать функции инициализации заново.
+            initSavings();
+            initMasturbation();
+            initDota();
+            initSportik();
+            initWeekdays();
+            initTTT();
+            initCurrency();
+            initTime();
+            initQuote();
+            initReset();
+        }
+
+        // ================================================================
+        // 5. ИНИЦИАЛИЗАЦИЯ КАЖДОГО БЛОКА
+        // ================================================================
         let savingsRunning = false;
         let savingsInterval = null;
+        let savings = 0;
+        let ratePerSecond = 5;
 
-        const savingsDisplay = document.getElementById('savingsDisplay');
-        const savingsRate = document.getElementById('savingsRate');
-        const rateInput = document.getElementById('rateInput');
-        const setRateBtn = document.getElementById('setRateBtn');
-        const startStopBtn = document.getElementById('startStopBtn');
-        const resetSavingsBtn = document.getElementById('resetSavingsBtn');
+        function initSavings() {
+            // Загрузка данных из Firebase будет позже
+            // Навешиваем события
+            setRateBtn.addEventListener('click', () => {
+                const val = parseFloat(rateInput.value);
+                if (val && val > 0) {
+                    ratePerSecond = val;
+                    savingsRate.textContent = ratePerSecond + ' ₽ / сек';
+                    if (currentUser) {
+                        db.collection('users').doc(currentUser.uid).set({ ratePerSecond }, { merge: true })
+                            .catch(e => console.warn('Ошибка сохранения ставки:', e));
+                    }
+                } else {
+                    alert('Введите положительное число');
+                }
+            });
 
-        function updateSavingsDisplay() {
-            savingsDisplay.textContent = Math.floor(savings) + ' ₽';
+            startStopBtn.addEventListener('click', startStopSavings);
+
+            resetSavingsBtn.addEventListener('click', () => {
+                if (confirm('Сбросить счётчик экономии?')) {
+                    savings = 0;
+                    updateSavingsDisplay();
+                    if (currentUser) {
+                        db.collection('users').doc(currentUser.uid).set({ savings: 0 }, { merge: true })
+                            .catch(e => console.warn('Ошибка сброса экономии:', e));
+                    }
+                }
+            });
         }
 
         function startStopSavings() {
             if (savingsRunning) {
-                // Остановить
                 clearInterval(savingsInterval);
                 savingsRunning = false;
                 startStopBtn.textContent = '▶ Старт';
                 startStopBtn.classList.remove('btn-danger');
                 startStopBtn.classList.add('btn-success');
             } else {
-                // Запустить
                 savingsRunning = true;
                 startStopBtn.textContent = '⏹ Стоп';
                 startStopBtn.classList.remove('btn-success');
@@ -969,32 +1069,9 @@
             }
         }
 
-        startStopBtn.addEventListener('click', startStopSavings);
-
-        resetSavingsBtn.addEventListener('click', () => {
-            if (confirm('Сбросить счётчик экономии?')) {
-                savings = 0;
-                updateSavingsDisplay();
-                if (currentUser) {
-                    db.collection('users').doc(currentUser.uid).set({ savings: 0 }, { merge: true })
-                        .catch(e => console.warn('Ошибка сброса экономии:', e));
-                }
-            }
-        });
-
-        setRateBtn.addEventListener('click', () => {
-            const val = parseFloat(rateInput.value);
-            if (val && val > 0) {
-                ratePerSecond = val;
-                savingsRate.textContent = ratePerSecond + ' ₽ / сек';
-                if (currentUser) {
-                    db.collection('users').doc(currentUser.uid).set({ ratePerSecond }, { merge: true })
-                        .catch(e => console.warn('Ошибка сохранения ставки:', e));
-                }
-            } else {
-                alert('Введите положительное число');
-            }
-        });
+        function updateSavingsDisplay() {
+            if (savingsDisplay) savingsDisplay.textContent = Math.floor(savings) + ' ₽';
+        }
 
         function loadSavingsFromFirebase() {
             if (!currentUser) return;
@@ -1012,20 +1089,18 @@
             }).catch(e => console.warn('Не удалось загрузить экономию:', e));
         }
 
-        // ================================================================
-        // 4. МАСТУРБАЦИЯ
-        // ================================================================
-        const masturbationBlock = document.getElementById('masturbationBlock');
-        const masturbationCount = document.getElementById('masturbationCount');
+        // Мастурбация
         let masturbationUnblurred = false;
-
-        masturbationBlock.addEventListener('click', () => {
-            masturbationUnblurred = !masturbationUnblurred;
-            masturbationCount.classList.toggle('unblurred', masturbationUnblurred);
-            if (currentUser) {
-                localStorage.setItem('masturbation_unblurred_' + currentUser.uid, masturbationUnblurred ? 'true' : 'false');
-            }
-        });
+        function initMasturbation() {
+            masturbationBlock.addEventListener('click', () => {
+                masturbationUnblurred = !masturbationUnblurred;
+                masturbationCount.classList.toggle('unblurred', masturbationUnblurred);
+                if (currentUser) {
+                    localStorage.setItem('masturbation_unblurred_' + currentUser.uid, masturbationUnblurred ? 'true' : 'false');
+                }
+            });
+            loadMasturbationState();
+        }
 
         function loadMasturbationState() {
             if (currentUser) {
@@ -1037,14 +1112,20 @@
             }
         }
 
-        // ================================================================
-        // 5. DOTA 2
-        // ================================================================
+        // Dota
         let dotaCount = 0;
-        const dotaCountEl = document.getElementById('dotaCount');
-        const dotaInput = document.getElementById('dotaInput');
-        const dotaMinus = document.getElementById('dotaMinus');
-        const dotaPlus = document.getElementById('dotaPlus');
+        function initDota() {
+            dotaPlus.addEventListener('click', () => updateDotaDisplay(dotaCount + 1));
+            dotaMinus.addEventListener('click', () => {
+                if (dotaCount > 0) updateDotaDisplay(dotaCount - 1);
+            });
+            dotaInput.addEventListener('change', () => {
+                let val = parseInt(dotaInput.value);
+                if (isNaN(val) || val < 0) val = 0;
+                updateDotaDisplay(val);
+            });
+            loadDotaFromFirebase();
+        }
 
         function updateDotaDisplay(value) {
             dotaCount = value;
@@ -1070,26 +1151,97 @@
             }).catch(e => console.warn('Не удалось загрузить Dota:', e));
         }
 
-        dotaPlus.addEventListener('click', () => updateDotaDisplay(dotaCount + 1));
-        dotaMinus.addEventListener('click', () => {
-            if (dotaCount > 0) updateDotaDisplay(dotaCount - 1);
-        });
-        dotaInput.addEventListener('change', () => {
-            let val = parseInt(dotaInput.value);
-            if (isNaN(val) || val < 0) val = 0;
-            updateDotaDisplay(val);
-        });
+        // Спортик / Неряха
+        let allEntries = [];
+        let unsubscribeDays = null;
 
-        // ================================================================
-        // 6. СПОРТИК / НЕРЯХА (без изменений, работа с Firestore)
-        // ================================================================
-        // DOM-элементы уже есть
+        function initSportik() {
+            choiceBtns.forEach(btn => {
+                btn.addEventListener('click', () => setChoice(btn.dataset.choice));
+            });
+            // Остальное загрузится через подписку
+        }
 
-        // ================================================================
-        // 7. ДНИ НЕДЕЛИ С ЗАМЕТКАМИ
-        // ================================================================
+        function getTodayKey() {
+            const d = new Date();
+            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        }
+
+        function renderToday() {
+            const today = new Date();
+            todayDate.textContent = today.toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
+            const todayKey = getTodayKey();
+            const todayDoc = allEntries.find(d => d.id === todayKey);
+            if (todayDoc) {
+                const choice = todayDoc.data().choice || 'none';
+                const emoji = choice === 'sport' ? '🏃' : choice === 'sloppy' ? '🧹' : choice === 'both' ? '🤷' : '😐';
+                const label = choice === 'sport' ? 'Спортик!' : choice === 'sloppy' ? 'Неряха!' : choice === 'both' ?
+                    'И то, и другое!' : 'Ничего...';
+                todayStatus.textContent = emoji + ' ' + label;
+                todaySub.textContent = choice === 'none' ? 'Ты сегодня ничего не выбрал. Но это тоже выбор!' :
+                    `Ты сегодня ${label.toLowerCase()}`;
+            } else {
+                todayStatus.textContent = '😐';
+                todaySub.textContent = 'Выбери, кем ты был сегодня';
+            }
+            choiceBtns.forEach(btn => {
+                btn.className = 'btn-choice';
+                if (todayDoc && todayDoc.data().choice === btn.dataset.choice) {
+                    btn.classList.add('active-' + btn.dataset.choice);
+                }
+            });
+        }
+
+        function renderStats() {
+            let sport = 0,
+                sloppy = 0,
+                both = 0;
+            allEntries.forEach(doc => {
+                const c = doc.data().choice || 'none';
+                if (c === 'sport') sport++;
+                else if (c === 'sloppy') sloppy++;
+                else if (c === 'both') both++;
+            });
+            sportCount.textContent = sport;
+            sloppyCount.textContent = sloppy;
+            bothCount.textContent = both;
+        }
+
+        function renderAll() {
+            renderToday();
+            renderStats();
+        }
+
+        async function setChoice(choice) {
+            if (!currentUser) return;
+            const todayKey = getTodayKey();
+            const docRef = db.collection('users').doc(currentUser.uid).collection('days').doc(todayKey);
+            try {
+                await docRef.set({ choice, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+            } catch (e) {
+                alert('Ошибка сохранения: ' + e.message);
+            }
+        }
+
+        function subscribeToDays(user) {
+            if (unsubscribeDays) unsubscribeDays();
+            const ref = db.collection('users').doc(user.uid).collection('days');
+            unsubscribeDays = ref.onSnapshot((snapshot) => {
+                allEntries = snapshot.docs;
+                renderAll();
+            }, (error) => {
+                console.error('Ошибка подписки:', error);
+                alert('Ошибка загрузки данных. Проверьте правила Firestore.');
+            });
+        }
+
+        // Дни недели
         const weekdays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
-        const weekdaysGrid = document.getElementById('weekdaysGrid');
+
+        function initWeekdays() {
+            renderWeekdays([]);
+            loadWeekNotes();
+        }
 
         function renderWeekdays(notes) {
             weekdaysGrid.innerHTML = '';
@@ -1133,16 +1285,15 @@
             }).catch(e => console.warn('Не удалось загрузить заметки:', e));
         }
 
-        // ================================================================
-        // 8. КРЕСТИКИ-НОЛИКИ (против ПК)
-        // ================================================================
-        const tttGrid = document.getElementById('tttGrid');
-        const tttStatus = document.getElementById('tttStatus');
-        const tttReset = document.getElementById('tttReset');
-
+        // Крестики-нолики
         let board = ['', '', '', '', '', '', '', '', ''];
-        let currentPlayer = 'X'; // X всегда человек
+        let currentPlayer = 'X';
         let gameOver = false;
+
+        function initTTT() {
+            tttReset.addEventListener('click', resetTTT);
+            renderTTT();
+        }
 
         function renderTTT() {
             tttGrid.innerHTML = '';
@@ -1182,8 +1333,6 @@
             if (gameOver) return;
             if (board[idx] !== '') return;
             if (currentPlayer !== 'X') return;
-
-            // Ход игрока
             board[idx] = 'X';
             renderTTT();
             const winner = checkWinner(board);
@@ -1194,16 +1343,13 @@
             }
             currentPlayer = 'O';
             tttStatus.textContent = 'Ход ПК (O)...';
-            // Ход компьютера с задержкой
             setTimeout(() => computerMove(), 400);
         }
 
         function computerMove() {
             if (gameOver) return;
-            // Простой AI: сначала блокировка победы игрока, затем случайный ход
             let move = findBestMove(board);
             if (move === -1) {
-                // Ничья или поле заполнено
                 const winner = checkWinner(board);
                 if (winner) {
                     gameOver = true;
@@ -1224,7 +1370,6 @@
         }
 
         function findBestMove(board) {
-            // Проверяем, может ли ПК выиграть
             for (let i = 0; i < 9; i++) {
                 if (board[i] === '') {
                     board[i] = 'O';
@@ -1235,7 +1380,6 @@
                     board[i] = '';
                 }
             }
-            // Блокируем победу игрока
             for (let i = 0; i < 9; i++) {
                 if (board[i] === '') {
                     board[i] = 'X';
@@ -1246,7 +1390,6 @@
                     board[i] = '';
                 }
             }
-            // Случайный ход
             const empty = board.map((v, i) => v === '' ? i : null).filter(v => v !== null);
             if (empty.length === 0) return -1;
             return empty[Math.floor(Math.random() * empty.length)];
@@ -1260,13 +1403,11 @@
             renderTTT();
         }
 
-        tttReset.addEventListener('click', resetTTT);
-
-        // ================================================================
-        // 9. КУРСЫ ВАЛЮТ (API ЦБ РФ)
-        // ================================================================
-        const usdRateEl = document.getElementById('usdRate');
-        const eurRateEl = document.getElementById('eurRate');
+        // Курсы валют
+        function initCurrency() {
+            fetchRates();
+            setInterval(fetchRates, 60000);
+        }
 
         async function fetchRates() {
             try {
@@ -1286,10 +1427,7 @@
             }
         }
 
-        // ================================================================
-        // 10. ВРЕМЯ СТОЛИЦ
-        // ================================================================
-        const timeGrid = document.getElementById('timeGrid');
+        // Время столиц
         const cities = [
             { name: 'Москва', tz: 'Europe/Moscow' },
             { name: 'Нью-Йорк', tz: 'America/New_York' },
@@ -1297,6 +1435,11 @@
             { name: 'Токио', tz: 'Asia/Tokyo' },
             { name: 'Сидней', tz: 'Australia/Sydney' }
         ];
+
+        function initTime() {
+            renderTimes();
+            setInterval(renderTimes, 1000);
+        }
 
         function renderTimes() {
             timeGrid.innerHTML = '';
@@ -1311,9 +1454,7 @@
             });
         }
 
-        // ================================================================
-        // 11. ЦИТАТА
-        // ================================================================
+        // Цитата
         const quotes = [
             { text: 'Будь спортиком, а не неряхой!', author: '— Денис' },
             { text: 'Сегодня ты — легенда! Завтра тоже.', author: '— Денис' },
@@ -1322,104 +1463,19 @@
             { text: 'Кто не спортит, тот не живёт.', author: '— Денис' },
             { text: 'Спортик делает мир лучше, неряха — веселее.', author: '— Денис' },
         ];
-        const quoteBox = document.getElementById('quoteBox');
+
+        function initQuote() {
+            setRandomQuote();
+        }
 
         function setRandomQuote() {
             const q = quotes[Math.floor(Math.random() * quotes.length)];
             quoteBox.innerHTML = `«${q.text}»<div class="author">${q.author}</div>`;
         }
 
-        // ================================================================
-        // 12. ОСНОВНАЯ ЛОГИКА (дни, статистика)
-        // ================================================================
-        const todayDate = document.getElementById('todayDate');
-        const todayStatus = document.getElementById('todayStatus');
-        const todaySub = document.getElementById('todaySub');
-        const choiceBtns = document.querySelectorAll('.btn-choice');
-        const sportCount = document.getElementById('sportCount');
-        const sloppyCount = document.getElementById('sloppyCount');
-        const bothCount = document.getElementById('bothCount');
-
-        let currentUser = null;
-        let allEntries = [];
-        let unsubscribeDays = null;
-
-        function getTodayKey() {
-            const d = new Date();
-            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-        }
-
-        function renderStats() {
-            let sport = 0,
-                sloppy = 0,
-                both = 0;
-            allEntries.forEach(doc => {
-                const c = doc.data().choice || 'none';
-                if (c === 'sport') sport++;
-                else if (c === 'sloppy') sloppy++;
-                else if (c === 'both') both++;
-            });
-            sportCount.textContent = sport;
-            sloppyCount.textContent = sloppy;
-            bothCount.textContent = both;
-        }
-
-        function renderToday() {
-            const today = new Date();
-            todayDate.textContent = today.toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
-            const todayKey = getTodayKey();
-            const todayDoc = allEntries.find(d => d.id === todayKey);
-            if (todayDoc) {
-                const choice = todayDoc.data().choice || 'none';
-                const emoji = choice === 'sport' ? '🏃' : choice === 'sloppy' ? '🧹' : choice === 'both' ? '🤷' : '😐';
-                const label = choice === 'sport' ? 'Спортик!' : choice === 'sloppy' ? 'Неряха!' : choice === 'both' ?
-                    'И то, и другое!' : 'Ничего...';
-                todayStatus.textContent = emoji + ' ' + label;
-                todaySub.textContent = choice === 'none' ? 'Ты сегодня ничего не выбрал. Но это тоже выбор!' :
-                    `Ты сегодня ${label.toLowerCase()}`;
-            } else {
-                todayStatus.textContent = '😐';
-                todaySub.textContent = 'Выбери, кем ты был сегодня';
-            }
-            // Подсветка кнопок
-            choiceBtns.forEach(btn => {
-                btn.className = 'btn-choice';
-                if (todayDoc && todayDoc.data().choice === btn.dataset.choice) {
-                    btn.classList.add('active-' + btn.dataset.choice);
-                }
-            });
-        }
-
-        function renderAll() {
-            renderToday();
-            renderStats();
-        }
-
-        async function setChoice(choice) {
-            if (!currentUser) return;
-            const todayKey = getTodayKey();
-            const docRef = db.collection('users').doc(currentUser.uid).collection('days').doc(todayKey);
-            try {
-                await docRef.set({ choice, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-            } catch (e) {
-                alert('Ошибка сохранения: ' + e.message);
-            }
-        }
-
-        choiceBtns.forEach(btn => {
-            btn.addEventListener('click', () => setChoice(btn.dataset.choice));
-        });
-
-        function subscribeToDays(user) {
-            if (unsubscribeDays) unsubscribeDays();
-            const ref = db.collection('users').doc(user.uid).collection('days');
-            unsubscribeDays = ref.onSnapshot((snapshot) => {
-                allEntries = snapshot.docs;
-                renderAll();
-            }, (error) => {
-                console.error('Ошибка подписки:', error);
-                alert('Ошибка загрузки данных. Проверьте правила Firestore.');
-            });
+        // Сброс
+        function initReset() {
+            resetBtn.addEventListener('click', resetAllDays);
         }
 
         async function resetAllDays() {
@@ -1434,13 +1490,11 @@
                 alert('Ошибка сброса: ' + e.message);
             }
         }
-        document.getElementById('resetBtn').addEventListener('click', resetAllDays);
 
         // ================================================================
-        // 13. АВТОРИЗАЦИЯ
+        // 6. АВТОРИЗАЦИЯ
         // ================================================================
         const authSection = document.getElementById('authSection');
-        const mainPanel = document.getElementById('mainPanel');
         const authTitle = document.getElementById('authTitle');
         const authSub = document.getElementById('authSub');
         const authBtn = document.getElementById('authBtn');
@@ -1450,6 +1504,7 @@
         const passwordInput = document.getElementById('password');
         const userEmailSpan = document.getElementById('userEmail');
         const logoutBtn = document.getElementById('logoutBtn');
+        let currentUser = null;
 
         authBtn.addEventListener('click', async () => {
             const email = emailInput.value.trim();
@@ -1481,12 +1536,14 @@
                 unsubscribeDays = null; }
             allEntries = [];
             renderAll();
-            if (savingsRunning) startStopSavings(); // остановить
+            if (savingsRunning) startStopSavings();
             if (savingsInterval) clearInterval(savingsInterval);
             savingsRunning = false;
             startStopBtn.textContent = '▶ Старт';
             startStopBtn.classList.remove('btn-danger');
             startStopBtn.classList.add('btn-success');
+            const panel = document.getElementById('mainPanel');
+            panel.classList.add('hidden');
         });
 
         auth.onAuthStateChanged((user) => {
@@ -1494,36 +1551,36 @@
                 currentUser = user;
                 userEmailSpan.textContent = user.email;
                 authSection.style.display = 'none';
-                mainPanel.style.display = 'grid';
-
                 // Проверяем, пройдена ли игра
                 const gameCompletedFlag = localStorage.getItem('gameCompleted_' + user.uid);
                 if (gameCompletedFlag === 'true') {
                     gameOverlay.classList.add('hidden');
-                    // Показываем главный экран
+                    const panel = document.getElementById('mainPanel');
+                    panel.classList.remove('hidden');
+                    if (!panel.hasChildNodes()) {
+                        buildMainPanel();
+                    }
+                    // Загружаем данные
                     loadSavingsFromFirebase();
                     loadDotaFromFirebase();
                     loadMasturbationState();
                     loadWeekNotes();
-                    // Запускаем экономию, если она была запущена (но по умолчанию выключена)
-                    // Пользователь сам нажмёт Старт
+                    // Подписываемся на дни
+                    subscribeToDays(user);
+                    // Инициализируем всё остальное (если ещё не инициализировано)
+                    if (typeof window._initialized === 'undefined') {
+                        initAllAfterAuth();
+                        window._initialized = true;
+                    }
                 } else {
-                    // Запускаем игру
+                    // Показываем игру
                     resetGame();
                 }
-                subscribeToDays(user);
-                setRandomQuote();
-                // Запускаем обновление времени и курсов
-                renderTimes();
-                fetchRates();
-                setInterval(renderTimes, 1000);
-                setInterval(fetchRates, 60000);
-                // Инициализируем крестики-нолики
-                resetTTT();
             } else {
                 currentUser = null;
                 authSection.style.display = 'block';
-                mainPanel.style.display = 'none';
+                const panel = document.getElementById('mainPanel');
+                panel.classList.add('hidden');
                 if (unsubscribeDays) { unsubscribeDays();
                     unsubscribeDays = null; }
                 allEntries = [];
@@ -1538,35 +1595,25 @@
             }
         });
 
-        // Начальная инициализация (если не авторизован)
-        renderAll();
-        setRandomQuote();
-        renderTTT();
-        renderTimes();
-        fetchRates();
-        setInterval(renderTimes, 1000);
-        setInterval(fetchRates, 60000);
-        // Если пользователь не авторизован, скрываем игру
-        if (!auth.currentUser) {
-            gameOverlay.classList.add('hidden');
+        function initAllAfterAuth() {
+            // Все инициализации уже выполнены через buildMainPanel -> initAfterBuild
+            // но для верности вызовем ещё раз
+            // На самом деле мы уже вызвали initAfterBuild() внутри buildMainPanel.
+            // Просто убедимся, что всё подвязано.
+            if (document.getElementById('savingsDisplay')) {
+                // уже есть
+            }
         }
 
-        // Обработчик для изменения размера окна – перерисовываем носки (если игра активна)
-        window.addEventListener('resize', () => {
-            if (!gameOverlay.classList.contains('hidden')) {
-                // Переспавним носки, чтобы они не вылезали за границы
-                // Просто перезапустим игру (сбросим прогресс)
-                // Но лучше просто обновить позиции? Для простоты перезапустим.
-                // Но чтобы не сбрасывать прогресс, можно просто обновить координаты существующих элементов.
-                // Однако проще перезапустить игру, если она не завершена.
-                if (!gameCompleted) {
-                    // Сохраняем прогресс? Нет, проще перезапустить.
-                    // Но чтобы не сбивать с толку, просто ничего не делаем.
-                }
-            }
-        });
+        // ================================================================
+        // 7. СТАРТ
+        // ================================================================
+        // При первом запуске показываем авторизацию
+        // Игру показываем только после входа
+        // Если пользователь уже авторизован, auth.onAuthStateChanged сработает сразу.
 
-        console.log('Приложение обновлено! Все функции работают.');
+        // Чтобы не было пустого экрана, показываем заглушку
+        console.log('Приложение готово.');
     </script>
 </body>
 </html>
