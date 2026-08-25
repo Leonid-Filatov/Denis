@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Денис — Спортик vs Неряха</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <style>
+        /* ===== ГЛОБАЛЬНЫЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --bg: #1e1e2f;
+            --card: #2d2d44;
+            --text: #f0f0f0;
+            --text-light: #b0b0c0;
+            --shadow: 0 8px 24px rgba(0,0,0,0.3);
+            --radius: 20px;
+            --green: #4caf50;
+            --red: #f44336;
+            --yellow: #ffc107;
+            --gray: #616161;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            margin: 0;
+        }
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 24px 20px 30px;
+        }
+        /* ===== ХЕДЕР ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff6b6b, #ffd93d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        .header .logout-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: var(--text-light);
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .header .logout-btn:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        /* ===== АВТОРИЗАЦИЯ ===== */
+        .auth-box {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            padding: 20px 0;
+        }
+        .auth-box h2 {
+            font-size: 1.5rem;
+        }
+        .auth-box .sub {
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+        .auth-box input {
+            padding: 12px 16px;
+            border: 2px solid #3a3a5a;
+            border-radius: 12px;
+            background: #1a1a2e;
+            color: white;
+            font-size: 1rem;
+        }
+        .auth-box input:focus {
+            outline: none;
+            border-color: #ffd93d;
+        }
+        .auth-box .btn-primary {
+            padding: 14px;
+            background: #ffd93d;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #1a1a2e;
+            cursor: pointer;
+        }
+        .auth-box .btn-primary:hover {
+            background: #ffc107;
+        }
+        .auth-box .toggle-link {
+            text-align: center;
+            color: var(--text-light);
+        }
+        .auth-box .toggle-link span {
+            color: #ffd93d;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .hidden {
+            display: none !important;
+        }
+        /* ===== ОСНОВНОЙ ИНТЕРФЕЙС ===== */
+        .main-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .today-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 16px 18px;
+            text-align: center;
+        }
+        .today-card .date {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        .today-card .status {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 6px 0;
+        }
+        .today-card .sub-status {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 12px 0 4px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .btn-choice {
+            flex: 1;
+            min-width: 80px;
+            padding: 12px 8px;
+            border: 2px solid #3a3a5a;
+            border-radius: 14px;
+            background: transparent;
+            color: var(--text);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+        .btn-choice.active-sport {
+            border-color: var(--green);
+            background: rgba(76,175,80,0.25);
+            color: #81c784;
+        }
+        .btn-choice.active-sloppy {
+            border-color: var(--red);
+            background: rgba(244,67,54,0.25);
+            color: #ef9a9a;
+        }
+        .btn-choice.active-both {
+            border-color: var(--yellow);
+            background: rgba(255,193,7,0.2);
+            color: #ffd54f;
+        }
+        .btn-choice.active-none {
+            border-color: var(--gray);
+            background: rgba(97,97,97,0.15);
+            color: #aaa;
+        }
+        .btn-choice:hover {
+            transform: scale(1.02);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+        .stat-item {
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 12px 6px;
+            text-align: center;
+        }
+        .stat-item .number {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+        .stat-item .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--text-light);
+        }
+        .stat-item.sport .number { color: var(--green); }
+        .stat-item.sloppy .number { color: var(--red); }
+        .stat-item.both .number { color: var(--yellow); }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .calendar .day-label {
+            text-align: center;
+            font-size: 0.65rem;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+        .calendar .day-cell {
+            aspect-ratio: 1;
+            border-radius: 10px;
+            background: #2a2a44;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+        .calendar .day-cell.sport { background: var(--green); color: white; }
+        .calendar .day-cell.sloppy { background: var(--red); color: white; }
+        .calendar .day-cell.both { background: var(--yellow); color: #1a1a2e; }
+        .calendar .day-cell.none { background: var(--gray); color: #aaa; }
+        .calendar .day-cell.today { border: 2px solid #ffd93d; }
+
+        .quote-box {
+            background: rgba(255,255,255,0.04);
+            border-radius: 14px;
+            padding: 14px 18px;
+            text-align: center;
+            font-style: italic;
+            color: var(--text-light);
+            border-left: 4px solid #ffd93d;
+        }
+        .quote-box .author {
+            font-style: normal;
+            font-weight: 600;
+            color: var(--text);
+            margin-top: 4px;
+            font-size: 0.8rem;
+        }
+        .reset-btn {
+            background: transparent;
+            border: 1px solid #444;
+            color: var(--text-light);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            width: fit-content;
+            align-self: center;
+        }
+        .reset-btn:hover {
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+        }
+        @media (max-width: 400px) {
+            .container { padding: 16px 12px; }
+            .header h1 { font-size: 1.4rem; }
+            .btn-choice { min-width: 60px; font-size: 0.8rem; padding: 10px 4px; }
+            .stats-grid { gap: 6px; }
+            .stat-item .number { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app">
+
+        <!-- ХЕДЕР -->
+        <div class="header">
+            <h1>🏋️‍♂️ Денис</h1>
+            <div class="user-info" id="userInfo">
+                <span id="userEmail"></span>
+                <button class="logout-btn" id="logoutBtn">🚪</button>
+            </div>
+        </div>
+
+        <!-- АВТОРИЗАЦИЯ -->
+        <div id="authSection" class="auth-box">
+            <h2 id="authTitle">Вход</h2>
+            <div class="sub" id="authSub">Войди, чтобы продолжить</div>
+            <input type="email" id="email" placeholder="Email" />
+            <input type="password" id="password" placeholder="Пароль (≥ 6 символов)" />
+            <button class="btn-primary" id="authBtn">Войти</button>
+            <div class="toggle-link">
+                <span id="toggleText">Нет аккаунта? </span>
+                <span id="toggleLink">Зарегистрироваться</span>
+            </div>
+        </div>
+
+        <!-- ОСНОВНОЙ ИНТЕРФЕЙС -->
+        <div id="mainPanel" class="main-panel hidden">
+
+            <div class="today-card">
+                <div class="date" id="todayDate"></div>
+                <div class="status" id="todayStatus">😐</div>
+                <div class="sub-status" id="todaySub">Выбери, кем ты был сегодня</div>
+                <div class="button-group">
+                    <button class="btn-choice" data-choice="sport">🏃 Спортик</button>
+                    <button class="btn-choice" data-choice="sloppy">🧹 Неряха</button>
+                    <button class="btn-choice" data-choice="both">🤷 И то, и другое</button>
+                    <button class="btn-choice" data-choice="none">😴 Ничего</button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-item sport">
+                    <div class="number" id="sportCount">0</div>
+                    <div class="label">🏃 Спортик</div>
+                </div>
+                <div class="stat-item sloppy">
+                    <div class="number" id="sloppyCount">0</div>
+                    <div class="label">🧹 Неряха</div>
+                </div>
+                <div class="stat-item both">
+                    <div class="number" id="bothCount">0</div>
+                    <div class="label">🤷 Оба</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 4px;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-light); margin-bottom: 6px;">
+                    <span>📅 Последние 30 дней</span>
+                    <span id="totalDays">Всего: 0</span>
+                </div>
+                <div class="calendar" id="calendarGrid"></div>
+            </div>
+
+            <div class="quote-box" id="quoteBox">
+                «Будь спортиком, а не неряхой!»
+                <div class="author">— Денис</div>
+            </div>
+
+            <button class="reset-btn" id="resetBtn">🔥 Сбросить все данные</button>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        // 1. ПОДКЛЮЧЕНИЕ FIREBASE — ЗАМЕНИТЕ НА СВОИ ДАННЫЕ
+        // ================================================================
+        const firebaseConfig = {
+            apiKey: "ВАШ_API_KEY",
+            authDomain: "ВАШ_ПРОЕКТ.firebaseapp.com",
+            projectId: "ВАШ_ПРОЕКТ",
+            storageBucket: "ВАШ_ПРОЕКТ.appspot.com",
+            messagingSenderId: "ВАШ_ID",
+            appId: "ВАШ_APP_ID"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // ================================================================
+        // 2. DOM
+        // ================================================================
+        const authSection = document.getElementById('authSection');
+        const mainPanel = document.getElementById('mainPanel');
+        const authTitle = document.getElementById('authTitle');
+        const authSub = document.getElementById('authSub');
+        const authBtn = document.getElementById('authBtn');
+        const toggleLink = document.getElementById('toggleLink');
+        const toggleText = document.getElementById('toggleText');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const userEmailSpan = document.getElementById('userEmail');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        const todayDate = document.getElementById('todayDate');
+        const todayStatus = document.getElementById('todayStatus');
+        const todaySub = document.getElementById('todaySub');
+        const choiceBtns = document.querySelectorAll('.btn-choice');
+        const sportCount = document.getElementById('sportCount');
+        const sloppyCount = document.getElementById('sloppyCount');
+        const bothCount = document.getElementById('bothCount');
+        const totalDaysSpan = document.getElementById('totalDays');
+        const calendarGrid = document.getElementById('calendarGrid');
+        const quoteBox = document.getElementById('quoteBox');
+        const resetBtn = document.getElementById('resetBtn');
+
+        let currentUser = null;
+        let todayEntryRef = null;       // ссылка на документ сегодняшнего дня
+        let allEntries = [];            // массив документов (для статистики)
+        let unsubscribe = null;
+
+        // ================================================================
+        // 3. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+        // ================================================================
+        function getTodayKey() {
+            const d = new Date();
+            return d.getFullYear() + '-' +
+                String(d.getMonth()+1).padStart(2,'0') + '-' +
+                String(d.getDate()).padStart(2,'0');
+        }
+
+        function getDateFromKey(key) {
+            const parts = key.split('-').map(Number);
+            return new Date(parts[0], parts[1]-1, parts[2]);
+        }
+
+        function getEmoji(choice) {
+            if (choice === 'sport') return '🏃';
+            if (choice === 'sloppy') return '🧹';
+            if (choice === 'both') return '🤷';
+            return '😐';
+        }
+
+        function getLabel(choice) {
+            if (choice === 'sport') return 'Спортик!';
+            if (choice === 'sloppy') return 'Неряха!';
+            if (choice === 'both') return 'И то, и другое!';
+            return 'Ничего...';
+        }
+
+        const quotes = [
+            { text: 'Будь спортиком, а не неряхой!', author: '— Денис' },
+            { text: 'Сегодня ты — легенда! Завтра тоже.', author: '— Денис' },
+            { text: 'Неряха — это временно, спортик — это навсегда.', author: '— Денис' },
+            { text: 'Даже если ты неряха, ты можешь стать спортиком завтра.', author: '— Денис' },
+            { text: 'Кто не спортит, тот не живёт.', author: '— Денис' },
+            { text: 'Спортик делает мир лучше, неряха — веселее.', author: '— Денис' },
+        ];
+
+        function randomQuote() {
+            return quotes[Math.floor(Math.random() * quotes.length)];
+        }
+
+        // ================================================================
+        // 4. ОТОБРАЖЕНИЕ
+        // ================================================================
+        function render() {
+            // Сегодня
+            const today = new Date();
+            todayDate.textContent = today.toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
+
+            // Найдём сегодняшнюю запись в allEntries
+            const todayKey = getTodayKey();
+            const todayDoc = allEntries.find(d => d.id === todayKey);
+            if (todayDoc) {
+                const choice = todayDoc.data().choice || 'none';
+                todayStatus.textContent = getEmoji(choice) + ' ' + getLabel(choice);
+                todaySub.textContent = choice === 'none' ? 'Ты сегодня ничего не выбрал. Но это тоже выбор!' :
+                    `Ты сегодня ${getLabel(choice).toLowerCase()}`;
+            } else {
+                todayStatus.textContent = '😐';
+                todaySub.textContent = 'Выбери, кем ты был сегодня';
+            }
+
+            // Статистика
+            let sport = 0, sloppy = 0, both = 0;
+            allEntries.forEach(doc => {
+                const c = doc.data().choice || 'none';
+                if (c === 'sport') sport++;
+                else if (c === 'sloppy') sloppy++;
+                else if (c === 'both') both++;
+            });
+            sportCount.textContent = sport;
+            sloppyCount.textContent = sloppy;
+            bothCount.textContent = both;
+            totalDaysSpan.textContent = 'Всего: ' + allEntries.length;
+
+            // Календарь (последние 30 дней)
+            const todayObj = new Date();
+            const cells = [];
+            for (let i = 29; i >= 0; i--) {
+                const d = new Date(todayObj);
+                d.setDate(d.getDate() - i);
+                const key = d.getFullYear() + '-' +
+                    String(d.getMonth()+1).padStart(2,'0') + '-' +
+                    String(d.getDate()).padStart(2,'0');
+                const doc = allEntries.find(entry => entry.id === key);
+                const choice = doc ? doc.data().choice : null;
+                const isToday = (i === 0);
+                let cls = 'day-cell';
+                if (choice === 'sport') cls += ' sport';
+                else if (choice === 'sloppy') cls += ' sloppy';
+                else if (choice === 'both') cls += ' both';
+                else if (choice === 'none') cls += ' none';
+                if (isToday) cls += ' today';
+                cells.push(`<div class="${cls}">${d.getDate()}</div>`);
+            }
+            // Добавим заголовки дней недели
+            const weekdays = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+            const header = weekdays.map(w => `<div class="day-label">${w}</div>`).join('');
+            calendarGrid.innerHTML = header + cells.join('');
+
+            // Цитата
+            const q = randomQuote();
+            quoteBox.innerHTML = `«${q.text}»<div class="author">${q.author}</div>`;
+
+            // Подсветка кнопок (активный выбор сегодня)
+            choiceBtns.forEach(btn => {
+                btn.className = 'btn-choice';
+                if (todayDoc && todayDoc.data().choice === btn.dataset.choice) {
+                    btn.classList.add('active-' + btn.dataset.choice);
+                }
+            });
+        }
+
+        // ================================================================
+        // 5. РАБОТА С FIREBASE
+        // ================================================================
+        async function setChoice(choice) {
+            if (!currentUser) return;
+            const todayKey = getTodayKey();
+            const docRef = db.collection('users').doc(currentUser.uid)
+                .collection('days').doc(todayKey);
+            try {
+                await docRef.set({ choice, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+            } catch (e) {
+                alert('Ошибка сохранения: ' + e.message);
+            }
+        }
+
+        async function resetAll() {
+            if (!currentUser) return;
+            if (!confirm('Точно сбросить все записи за все дни? Это необратимо!')) return;
+            try {
+                const snapshot = await db.collection('users').doc(currentUser.uid)
+                    .collection('days').get();
+                const batch = db.batch();
+                snapshot.forEach(doc => batch.delete(doc.ref));
+                await batch.commit();
+            } catch (e) {
+                alert('Ошибка сброса: ' + e.message);
+            }
+        }
+
+        function subscribeToDays(user) {
+            if (unsubscribe) unsubscribe();
+            const ref = db.collection('users').doc(user.uid).collection('days');
+            unsubscribe = ref.onSnapshot((snapshot) => {
+                allEntries = snapshot.docs;
+                render();
+            }, (error) => {
+                console.error('Ошибка подписки:', error);
+                alert('Ошибка загрузки данных. Проверьте правила Firestore.');
+            });
+        }
+
+        // ================================================================
+        // 6. ОБРАБОТЧИКИ СОБЫТИЙ
+        // ================================================================
+
+        // Выбор кнопки
+        choiceBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                setChoice(btn.dataset.choice);
+            });
+        });
+
+        // Авторизация
+        authBtn.addEventListener('click', async () => {
+            const email = emailInput.value.trim();
+            const pass = passwordInput.value.trim();
+            if (!email || !pass) return alert('Заполните все поля');
+            try {
+                if (authBtn.textContent === 'Войти') {
+                    await auth.signInWithEmailAndPassword(email, pass);
+                } else {
+                    await auth.createUserWithEmailAndPassword(email, pass);
+                }
+            } catch (e) {
+                alert('Ошибка: ' + e.message);
+            }
+        });
+
+        toggleLink.addEventListener('click', () => {
+            const isLogin = authBtn.textContent === 'Войти';
+            authBtn.textContent = isLogin ? 'Зарегистрироваться' : 'Войти';
+            authTitle.textContent = isLogin ? 'Регистрация' : 'Вход';
+            authSub.textContent = isLogin ? 'Создай аккаунт' : 'Войди, чтобы продолжить';
+            toggleText.textContent = isLogin ? 'Уже есть аккаунт? ' : 'Нет аккаунта? ';
+            toggleLink.textContent = isLogin ? 'Войти' : 'Зарегистрироваться';
+        });
+
+        logoutBtn.addEventListener('click', async () => {
+            await auth.signOut();
+            if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+            allEntries = [];
+            render();
+        });
+
+        resetBtn.addEventListener('click', resetAll);
+
+        // ================================================================
+        // 7. СОСТОЯНИЕ АВТОРИЗАЦИИ
+        // ================================================================
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentUser = user;
+                userEmailSpan.textContent = user.email;
+                authSection.classList.add('hidden');
+                mainPanel.classList.remove('hidden');
+                subscribeToDays(user);
+            } else {
+                currentUser = null;
+                authSection.classList.remove('hidden');
+                mainPanel.classList.add('hidden');
+                if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+                allEntries = [];
+                render();
+            }
+        });
+
+        // Начальный рендер
+        render();
+    </script>
+</body>
+</html>
