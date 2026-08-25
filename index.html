@@ -131,6 +131,288 @@
         .hidden {
             display: none !important;
         }
+
+        /* ===== БЛОК ЭКОНОМИИ ===== */
+        .savings-block {
+            background: rgba(255,255,255,0.04);
+            border-radius: 16px;
+            padding: 16px 18px;
+            text-align: center;
+        }
+        .savings-block .amount {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--yellow);
+        }
+        .savings-block .sub {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        .savings-block .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0 6px;
+            flex-wrap: wrap;
+        }
+        .savings-block .input-group input {
+            width: 120px;
+            padding: 8px 12px;
+            border: 2px solid #3a3a5a;
+            border-radius: 10px;
+            background: #1a1a2e;
+            color: white;
+            font-size: 1rem;
+            text-align: center;
+        }
+        .savings-block .input-group input:focus {
+            outline: none;
+            border-color: #ffd93d;
+        }
+        .savings-block .input-group button {
+            padding: 8px 18px;
+            background: #ffd93d;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            color: #1a1a2e;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .savings-block .input-group button:hover {
+            background: #ffc107;
+        }
+        .savings-block .rate {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* ===== БЛОК МАСТУРБАЦИИ ===== */
+        .masturbation-block {
+            background: linear-gradient(135deg, #ff6b9d, #b35eb5);
+            border-radius: 16px;
+            padding: 14px 18px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(255, 107, 157, 0.3);
+            cursor: pointer;
+            transition: 0.3s;
+            user-select: none;
+        }
+        .masturbation-block:hover {
+            transform: scale(1.02);
+        }
+        .masturbation-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .masturbation-count {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: white;
+            margin: 6px 0 2px;
+            filter: blur(12px);
+            transition: filter 0.4s ease, transform 0.2s;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .masturbation-count.unblurred {
+            filter: blur(0);
+        }
+        .masturbation-hint {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.7);
+            font-weight: 500;
+        }
+
+        /* ===== БЛОК DOTA 2 ===== */
+        .dota-block {
+            background: linear-gradient(145deg, #1a0f0a, #2d1810);
+            border-radius: 16px;
+            padding: 16px 18px;
+            text-align: center;
+            border: 2px solid #b8860b;
+            box-shadow: 0 0 20px rgba(184, 134, 11, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .dota-block::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 40%, rgba(184, 134, 11, 0.08), transparent 70%);
+            pointer-events: none;
+        }
+        .dota-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #d4af37;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .dota-title span {
+            font-size: 1.4rem;
+        }
+        .dota-count {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #d4af37;
+            margin: 8px 0 6px;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+            font-family: 'Cinzel', 'Segoe UI', serif;
+            letter-spacing: 2px;
+        }
+        .dota-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+        .dota-controls button {
+            background: #3a251a;
+            border: 2px solid #b8860b;
+            color: #d4af37;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 1.6rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 0 10px rgba(184, 134, 11, 0.2);
+            line-height: 1;
+        }
+        .dota-controls button:hover {
+            background: #b8860b;
+            color: #1a0f0a;
+            transform: scale(1.1);
+        }
+        .dota-controls input {
+            width: 80px;
+            padding: 8px 6px;
+            background: #1a0f0a;
+            border: 2px solid #b8860b;
+            border-radius: 10px;
+            color: #d4af37;
+            font-size: 1.2rem;
+            text-align: center;
+            font-weight: 700;
+        }
+        .dota-controls input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+        .dota-hint {
+            font-size: 0.7rem;
+            color: #b8860b;
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+
+        /* ===== ИГРА «СОБЕРИ НОСКИ И ТРУСЫ» ===== */
+        .game-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .game-overlay.hidden {
+            display: none;
+        }
+        .game-box {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 30px 24px 24px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            position: relative;
+        }
+        .game-box h2 {
+            margin-bottom: 8px;
+        }
+        .game-box .sub {
+            color: var(--text-light);
+            margin-bottom: 16px;
+        }
+        .sock-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 12px 0 18px;
+        }
+        .sock {
+            background: #3a3a5a;
+            border-radius: 12px;
+            padding: 12px 6px;
+            font-size: 2.2rem;
+            cursor: pointer;
+            transition: 0.2s;
+            user-select: none;
+            border: 2px solid transparent;
+        }
+        .sock:hover {
+            transform: scale(1.05);
+            background: #4a4a6a;
+        }
+        .sock.collected {
+            opacity: 0.3;
+            cursor: default;
+            transform: scale(0.9);
+            filter: grayscale(1);
+            pointer-events: none;
+        }
+        .sock.basket {
+            background: #2d5a3a;
+            border-color: var(--green);
+            font-size: 2.6rem;
+        }
+        .game-box .progress-text {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+        .game-box .btn-start-game {
+            padding: 12px 28px;
+            background: var(--green);
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .game-box .btn-start-game:hover {
+            background: #388e3c;
+        }
+        .game-complete {
+            color: var(--yellow);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
         /* ===== ОСНОВНОЙ ИНТЕРФЕЙС ===== */
         .main-panel {
             display: flex;
@@ -290,10 +572,28 @@
             .btn-choice { min-width: 60px; font-size: 0.8rem; padding: 10px 4px; }
             .stats-grid { gap: 6px; }
             .stat-item .number { font-size: 1.2rem; }
+            .sock-grid { gap: 8px; }
+            .sock { font-size: 1.6rem; padding: 8px 4px; }
+            .masturbation-count { font-size: 2.2rem; }
+            .dota-count { font-size: 2.4rem; }
+            .dota-controls input { width: 60px; font-size: 1rem; }
         }
     </style>
 </head>
 <body>
+
+    <!-- ===== ИГРА «СОБЕРИ НОСКИ И ТРУСЫ» ===== -->
+    <div class="game-overlay" id="gameOverlay">
+        <div class="game-box">
+            <h2>🧦 Собери носки и трусы!</h2>
+            <div class="sub">Кликни на каждый предмет, чтобы отправить в корзину</div>
+            <div class="sock-grid" id="sockGrid"></div>
+            <div class="progress-text" id="sockProgress">Собрано: 0 / 13</div>
+            <div id="gameCompleteMessage" class="hidden game-complete">🎉 Всё собрано! Приложение разблокировано!</div>
+            <button class="btn-start-game" id="startGameBtn">🔄 Начать заново</button>
+        </div>
+    </div>
+
     <div class="container" id="app">
 
         <!-- ХЕДЕР -->
@@ -320,6 +620,39 @@
 
         <!-- ОСНОВНОЙ ИНТЕРФЕЙС -->
         <div id="mainPanel" class="main-panel hidden">
+
+            <!-- ЭКОНОМИЯ -->
+            <div class="savings-block">
+                <div class="sub">💰 Сэкономлено</div>
+                <div class="amount" id="savingsDisplay">0 ₽</div>
+                <div class="rate" id="savingsRate">5 ₽ / сек</div>
+                <div class="input-group">
+                    <input type="number" id="rateInput" value="5" step="0.5" min="0.5" />
+                    <span style="color:var(--text-light);">₽/сек</span>
+                    <button id="setRateBtn">Установить</button>
+                </div>
+            </div>
+
+            <!-- БЛОК МАСТУРБАЦИИ -->
+            <div class="masturbation-block" id="masturbationBlock">
+                <div class="masturbation-title">🍆 Счётчик мастурбации</div>
+                <div class="masturbation-count" id="masturbationCount">116</div>
+                <div class="masturbation-hint">(кликни, чтобы разблокировать)</div>
+            </div>
+
+            <!-- БЛОК DOTA 2 -->
+            <div class="dota-block">
+                <div class="dota-title">
+                    <span>⚔️</span> Приогранные катки в Dota 2 <span>🏆</span>
+                </div>
+                <div class="dota-count" id="dotaCount">0</div>
+                <div class="dota-controls">
+                    <button id="dotaMinus">−</button>
+                    <input type="number" id="dotaInput" value="0" min="0" step="1" />
+                    <button id="dotaPlus">+</button>
+                </div>
+                <div class="dota-hint">✏️ Редактируй значение</div>
+            </div>
 
             <div class="today-card">
                 <div class="date" id="todayDate"></div>
@@ -362,6 +695,7 @@
             </div>
 
             <button class="reset-btn" id="resetBtn">🔥 Сбросить все данные</button>
+            <button class="reset-btn" id="resetSavingsBtn" style="border-color:#ffd93d; color:#ffd93d;">💸 Сбросить счётчик экономии</button>
         </div>
     </div>
 
@@ -382,7 +716,288 @@
         const db = firebase.firestore();
 
         // ================================================================
-        // 2. DOM
+        // 2. ИГРА «СОБЕРИ НОСКИ И ТРУСЫ»
+        // ================================================================
+        const gameOverlay = document.getElementById('gameOverlay');
+        const sockGrid = document.getElementById('sockGrid');
+        const sockProgress = document.getElementById('sockProgress');
+        const gameCompleteMessage = document.getElementById('gameCompleteMessage');
+        const startGameBtn = document.getElementById('startGameBtn');
+
+        let socks = [];
+        let collectedCount = 0;
+        const totalSocks = 13; // 10 носков + 3 труса
+
+        // Создаём массив: 10 носков и 3 труса
+        const sockEmojis = [];
+        for (let i = 0; i < 10; i++) sockEmojis.push('🧦');
+        for (let i = 0; i < 3; i++) sockEmojis.push('🩲');
+
+        let gameCompleted = false;
+
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function initGame() {
+            socks = shuffleArray([...sockEmojis]);
+            collectedCount = 0;
+            gameCompleted = false;
+            gameCompleteMessage.classList.add('hidden');
+            renderSocks();
+            updateProgress();
+            if (gameOverlay.classList.contains('hidden')) {
+                gameOverlay.classList.remove('hidden');
+            }
+            document.getElementById('mainPanel').classList.add('hidden');
+        }
+
+        function renderSocks() {
+            sockGrid.innerHTML = '';
+            socks.forEach((emoji, index) => {
+                const div = document.createElement('div');
+                div.className = 'sock';
+                div.textContent = emoji;
+                div.dataset.index = index;
+                if (collectedCount > index || socks[index] === '🧺') {
+                    div.classList.add('collected');
+                }
+                // Последняя ячейка — корзина (но мы её не добавляем в массив, а просто рисуем)
+                // У нас нет отдельной корзины в сетке, но мы можем сделать её как отдельный элемент.
+                // Вместо этого мы просто показываем корзину как часть сетки? Лучше сделать отдельную ячейку корзины.
+                // Но для простоты мы уже рисуем корзину как последний элемент, но у нас 13 предметов, а сетка 4 колонки, 
+                // поэтому корзину добавим отдельно в конце.
+                // Переделаем: добавим корзину как последний элемент сетки.
+                // Для этого изменим логику: последний индекс будет корзина.
+                // Но проще просто добавить корзину после цикла.
+            });
+            // Добавляем корзину как отдельный элемент в конце сетки
+            const basketDiv = document.createElement('div');
+            basketDiv.className = 'sock basket';
+            basketDiv.textContent = '🧺';
+            basketDiv.style.pointerEvents = 'none';
+            sockGrid.appendChild(basketDiv);
+        }
+
+        // Новая функция рендеринга с корзиной
+        function renderSocks() {
+            sockGrid.innerHTML = '';
+            socks.forEach((emoji, index) => {
+                const div = document.createElement('div');
+                div.className = 'sock';
+                div.textContent = emoji;
+                div.dataset.index = index;
+                if (collectedCount > index || socks[index] === '✅') {
+                    div.classList.add('collected');
+                }
+                div.addEventListener('click', () => handleSockClick(index));
+                sockGrid.appendChild(div);
+            });
+            // Добавляем корзину
+            const basketDiv = document.createElement('div');
+            basketDiv.className = 'sock basket';
+            basketDiv.textContent = '🧺';
+            basketDiv.style.pointerEvents = 'none';
+            sockGrid.appendChild(basketDiv);
+        }
+
+        function updateProgress() {
+            sockProgress.textContent = `Собрано: ${collectedCount} / ${totalSocks}`;
+        }
+
+        function handleSockClick(index) {
+            if (gameCompleted) return;
+            if (socks[index] === '✅') return;
+            socks[index] = '✅';
+            collectedCount++;
+            updateProgress();
+            renderSocks();
+            if (collectedCount === totalSocks) {
+                gameCompleted = true;
+                gameCompleteMessage.classList.remove('hidden');
+                setTimeout(() => {
+                    gameOverlay.classList.add('hidden');
+                    document.getElementById('mainPanel').classList.remove('hidden');
+                    if (!savingsStarted) {
+                        startSavings();
+                    }
+                }, 1200);
+            }
+        }
+
+        startGameBtn.addEventListener('click', () => {
+            initGame();
+            gameCompleteMessage.classList.add('hidden');
+            gameOverlay.classList.remove('hidden');
+            document.getElementById('mainPanel').classList.add('hidden');
+            savings = 0;
+            savingsStarted = false;
+            document.getElementById('savingsDisplay').textContent = '0 ₽';
+        });
+
+        // ================================================================
+        // 3. ЭКОНОМИЯ (без изменений)
+        // ================================================================
+        let savings = 0;
+        let ratePerSecond = 5;
+        let savingsStarted = false;
+        let savingsInterval = null;
+
+        function startSavings() {
+            if (savingsStarted) return;
+            savingsStarted = true;
+            loadSavingsFromFirebase();
+            if (savingsInterval) clearInterval(savingsInterval);
+            savingsInterval = setInterval(() => {
+                if (savingsStarted && !gameOverlay.classList.contains('hidden') === false) {
+                    savings += ratePerSecond;
+                    updateSavingsDisplay();
+                    if (Math.floor(savings) % 10 === 0) {
+                        saveSavingsToFirebase();
+                    }
+                }
+            }, 1000);
+        }
+
+        function updateSavingsDisplay() {
+            document.getElementById('savingsDisplay').textContent = Math.floor(savings) + ' ₽';
+        }
+
+        document.getElementById('setRateBtn').addEventListener('click', () => {
+            const val = parseFloat(document.getElementById('rateInput').value);
+            if (val && val > 0) {
+                ratePerSecond = val;
+                document.getElementById('savingsRate').textContent = ratePerSecond + ' ₽ / сек';
+                saveRateToFirebase();
+            } else {
+                alert('Введите положительное число');
+            }
+        });
+
+        function loadRateFromFirebase() {
+            if (!currentUser) return;
+            db.collection('users').doc(currentUser.uid).get().then(doc => {
+                if (doc.exists && doc.data().ratePerSecond) {
+                    ratePerSecond = doc.data().ratePerSecond;
+                    document.getElementById('rateInput').value = ratePerSecond;
+                    document.getElementById('savingsRate').textContent = ratePerSecond + ' ₽ / сек';
+                }
+            }).catch(e => console.warn('Не удалось загрузить ставку:', e));
+        }
+
+        function saveRateToFirebase() {
+            if (!currentUser) return;
+            db.collection('users').doc(currentUser.uid).set({ ratePerSecond }, { merge: true })
+                .catch(e => console.warn('Ошибка сохранения ставки:', e));
+        }
+
+        function loadSavingsFromFirebase() {
+            if (!currentUser) return;
+            db.collection('users').doc(currentUser.uid).get().then(doc => {
+                if (doc.exists && doc.data().savings) {
+                    savings = doc.data().savings;
+                    updateSavingsDisplay();
+                }
+            }).catch(e => console.warn('Не удалось загрузить экономию:', e));
+        }
+
+        function saveSavingsToFirebase() {
+            if (!currentUser) return;
+            db.collection('users').doc(currentUser.uid).set({ savings }, { merge: true })
+                .catch(e => console.warn('Ошибка сохранения экономии:', e));
+        }
+
+        document.getElementById('resetSavingsBtn').addEventListener('click', () => {
+            if (confirm('Сбросить счётчик экономии?')) {
+                savings = 0;
+                updateSavingsDisplay();
+                if (currentUser) {
+                    db.collection('users').doc(currentUser.uid).set({ savings: 0 }, { merge: true })
+                        .catch(e => console.warn('Ошибка сброса экономии:', e));
+                }
+            }
+        });
+
+        // ================================================================
+        // 4. БЛОК МАСТУРБАЦИИ
+        // ================================================================
+        const masturbationBlock = document.getElementById('masturbationBlock');
+        const masturbationCount = document.getElementById('masturbationCount');
+        let masturbationUnblurred = false;
+
+        masturbationBlock.addEventListener('click', () => {
+            masturbationUnblurred = !masturbationUnblurred;
+            masturbationCount.classList.toggle('unblurred', masturbationUnblurred);
+            if (currentUser) {
+                localStorage.setItem('masturbation_unblurred_' + currentUser.uid, masturbationUnblurred ? 'true' : 'false');
+            }
+        });
+
+        function loadMasturbationState() {
+            if (currentUser) {
+                const saved = localStorage.getItem('masturbation_unblurred_' + currentUser.uid);
+                if (saved === 'true') {
+                    masturbationUnblurred = true;
+                    masturbationCount.classList.add('unblurred');
+                }
+            }
+        }
+
+        // ================================================================
+        // 5. БЛОК DOTA 2
+        // ================================================================
+        let dotaCount = 0;
+        const dotaCountEl = document.getElementById('dotaCount');
+        const dotaInput = document.getElementById('dotaInput');
+        const dotaMinus = document.getElementById('dotaMinus');
+        const dotaPlus = document.getElementById('dotaPlus');
+
+        function updateDotaDisplay(value) {
+            dotaCount = value;
+            dotaCountEl.textContent = value;
+            dotaInput.value = value;
+            if (currentUser) {
+                db.collection('users').doc(currentUser.uid).set({ dotaCount: value }, { merge: true })
+                    .catch(e => console.warn('Ошибка сохранения Dota:', e));
+            }
+        }
+
+        function loadDotaFromFirebase() {
+            if (!currentUser) return;
+            db.collection('users').doc(currentUser.uid).get().then(doc => {
+                if (doc.exists && doc.data().dotaCount !== undefined) {
+                    const val = doc.data().dotaCount;
+                    dotaCount = val;
+                    dotaCountEl.textContent = val;
+                    dotaInput.value = val;
+                } else {
+                    updateDotaDisplay(0);
+                }
+            }).catch(e => console.warn('Не удалось загрузить Dota:', e));
+        }
+
+        dotaPlus.addEventListener('click', () => {
+            updateDotaDisplay(dotaCount + 1);
+        });
+
+        dotaMinus.addEventListener('click', () => {
+            if (dotaCount > 0) {
+                updateDotaDisplay(dotaCount - 1);
+            }
+        });
+
+        dotaInput.addEventListener('change', () => {
+            let val = parseInt(dotaInput.value);
+            if (isNaN(val) || val < 0) val = 0;
+            updateDotaDisplay(val);
+        });
+
+        // ================================================================
+        // 6. ОСТАЛЬНОЙ КОД (без изменений)
         // ================================================================
         const authSection = document.getElementById('authSection');
         const mainPanel = document.getElementById('mainPanel');
@@ -409,23 +1024,14 @@
         const resetBtn = document.getElementById('resetBtn');
 
         let currentUser = null;
-        let todayEntryRef = null;
         let allEntries = [];
         let unsubscribe = null;
 
-        // ================================================================
-        // 3. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
-        // ================================================================
         function getTodayKey() {
             const d = new Date();
             return d.getFullYear() + '-' +
                 String(d.getMonth()+1).padStart(2,'0') + '-' +
                 String(d.getDate()).padStart(2,'0');
-        }
-
-        function getDateFromKey(key) {
-            const parts = key.split('-').map(Number);
-            return new Date(parts[0], parts[1]-1, parts[2]);
         }
 
         function getEmoji(choice) {
@@ -455,9 +1061,6 @@
             return quotes[Math.floor(Math.random() * quotes.length)];
         }
 
-        // ================================================================
-        // 4. ОТОБРАЖЕНИЕ
-        // ================================================================
         function render() {
             const today = new Date();
             todayDate.textContent = today.toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
@@ -520,9 +1123,6 @@
             });
         }
 
-        // ================================================================
-        // 5. РАБОТА С FIREBASE
-        // ================================================================
         async function setChoice(choice) {
             if (!currentUser) return;
             const todayKey = getTodayKey();
@@ -561,10 +1161,6 @@
             });
         }
 
-        // ================================================================
-        // 6. ОБРАБОТЧИКИ СОБЫТИЙ
-        // ================================================================
-
         choiceBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 setChoice(btn.dataset.choice);
@@ -600,19 +1196,29 @@
             if (unsubscribe) { unsubscribe(); unsubscribe = null; }
             allEntries = [];
             render();
+            savingsStarted = false;
+            if (savingsInterval) clearInterval(savingsInterval);
         });
 
         resetBtn.addEventListener('click', resetAll);
 
-        // ================================================================
-        // 7. СОСТОЯНИЕ АВТОРИЗАЦИИ
-        // ================================================================
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUser = user;
                 userEmailSpan.textContent = user.email;
                 authSection.classList.add('hidden');
-                mainPanel.classList.remove('hidden');
+                const gameCompletedFlag = localStorage.getItem('gameCompleted_' + user.uid);
+                if (gameCompletedFlag === 'true') {
+                    gameOverlay.classList.add('hidden');
+                    mainPanel.classList.remove('hidden');
+                    loadRateFromFirebase();
+                    loadSavingsFromFirebase();
+                    loadDotaFromFirebase();
+                    loadMasturbationState();
+                    startSavings();
+                } else {
+                    initGame();
+                }
                 subscribeToDays(user);
             } else {
                 currentUser = null;
@@ -621,8 +1227,20 @@
                 if (unsubscribe) { unsubscribe(); unsubscribe = null; }
                 allEntries = [];
                 render();
+                savingsStarted = false;
+                if (savingsInterval) clearInterval(savingsInterval);
+                gameOverlay.classList.add('hidden');
             }
         });
+
+        const observer = new MutationObserver(() => {
+            if (!gameCompleteMessage.classList.contains('hidden')) {
+                if (currentUser) {
+                    localStorage.setItem('gameCompleted_' + currentUser.uid, 'true');
+                }
+            }
+        });
+        observer.observe(gameCompleteMessage, { attributes: true, attributeFilter: ['class'] });
 
         render();
     </script>
