@@ -1547,53 +1547,41 @@
         });
 
         auth.onAuthStateChanged((user) => {
-            if (user) {
-                currentUser = user;
-                userEmailSpan.textContent = user.email;
-                authSection.style.display = 'none';
-                // Проверяем, пройдена ли игра
-                const gameCompletedFlag = localStorage.getItem('gameCompleted_' + user.uid);
-                if (gameCompletedFlag === 'true') {
-                    gameOverlay.classList.add('hidden');
-                    const panel = document.getElementById('mainPanel');
-                    panel.classList.remove('hidden');
-                    if (!panel.hasChildNodes()) {
-                        buildMainPanel();
-                    }
-                    // Загружаем данные
-                    loadSavingsFromFirebase();
-                    loadDotaFromFirebase();
-                    loadMasturbationState();
-                    loadWeekNotes();
-                    // Подписываемся на дни
-                    subscribeToDays(user);
-                    // Инициализируем всё остальное (если ещё не инициализировано)
-                    if (typeof window._initialized === 'undefined') {
-                        initAllAfterAuth();
-                        window._initialized = true;
-                    }
-                } else {
-                    // Показываем игру
-                    resetGame();
-                }
-            } else {
-                currentUser = null;
-                authSection.style.display = 'block';
-                const panel = document.getElementById('mainPanel');
-                panel.classList.add('hidden');
-                if (unsubscribeDays) { unsubscribeDays();
-                    unsubscribeDays = null; }
-                allEntries = [];
-                renderAll();
-                if (savingsRunning) startStopSavings();
-                if (savingsInterval) clearInterval(savingsInterval);
-                savingsRunning = false;
-                startStopBtn.textContent = '▶ Старт';
-                startStopBtn.classList.remove('btn-danger');
-                startStopBtn.classList.add('btn-success');
-                gameOverlay.classList.add('hidden');
-            }
-        });
+    if (user) {
+        currentUser = user;
+        userEmailSpan.textContent = user.email;
+        authSection.style.display = 'none';
+        const gameCompletedFlag = localStorage.getItem('gameCompleted_' + user.uid);
+        if (gameCompletedFlag === 'true') {
+            gameOverlay.classList.add('hidden');
+            const panel = document.getElementById('mainPanel');
+            panel.classList.remove('hidden');
+            buildMainPanel();
+            loadSavingsFromFirebase();
+            loadDotaFromFirebase();
+            loadMasturbationState();
+            loadWeekNotes();
+            subscribeToDays(user);
+        } else {
+            resetGame();
+        }
+    } else {
+        currentUser = null;
+        authSection.style.display = 'block';
+        const panel = document.getElementById('mainPanel');
+        panel.classList.add('hidden');
+        if (unsubscribeDays) { unsubscribeDays(); unsubscribeDays = null; }
+        allEntries = [];
+        renderAll();
+        if (savingsRunning) startStopSavings();
+        if (savingsInterval) clearInterval(savingsInterval);
+        savingsRunning = false;
+        startStopBtn.textContent = '? �����';
+        startStopBtn.classList.remove('btn-danger');
+        startStopBtn.classList.add('btn-success');
+        gameOverlay.classList.add('hidden');
+    }
+});
 
         function initAllAfterAuth() {
             // Все инициализации уже выполнены через buildMainPanel -> initAfterBuild
