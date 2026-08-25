@@ -367,15 +367,15 @@
 
     <script>
         // ================================================================
-        // 1. ПОДКЛЮЧЕНИЕ FIREBASE — ЗАМЕНИТЕ НА СВОИ ДАННЫЕ
+        // 1. ПОДКЛЮЧЕНИЕ FIREBASE (исправлено)
         // ================================================================
         const firebaseConfig = {
-            apiKey: "ВАШ_API_KEY",
-            authDomain: "ВАШ_ПРОЕКТ.firebaseapp.com",
-            projectId: "ВАШ_ПРОЕКТ",
-            storageBucket: "ВАШ_ПРОЕКТ.appspot.com",
-            messagingSenderId: "ВАШ_ID",
-            appId: "ВАШ_APP_ID"
+            apiKey: "AIzaSyAbiVXdC3ctylepTMnhr4sqgZ2rqt6C3gY",
+            authDomain: "denis-6f30c.firebaseapp.com",
+            projectId: "denis-6f30c",
+            storageBucket: "denis-6f30c.firebasestorage.app",
+            messagingSenderId: "527961937380",
+            appId: "1:527961937380:web:6ac6fa61275ff1bf2aa3f1"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
@@ -409,8 +409,8 @@
         const resetBtn = document.getElementById('resetBtn');
 
         let currentUser = null;
-        let todayEntryRef = null;       // ссылка на документ сегодняшнего дня
-        let allEntries = [];            // массив документов (для статистики)
+        let todayEntryRef = null;
+        let allEntries = [];
         let unsubscribe = null;
 
         // ================================================================
@@ -459,11 +459,9 @@
         // 4. ОТОБРАЖЕНИЕ
         // ================================================================
         function render() {
-            // Сегодня
             const today = new Date();
             todayDate.textContent = today.toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
 
-            // Найдём сегодняшнюю запись в allEntries
             const todayKey = getTodayKey();
             const todayDoc = allEntries.find(d => d.id === todayKey);
             if (todayDoc) {
@@ -476,7 +474,6 @@
                 todaySub.textContent = 'Выбери, кем ты был сегодня';
             }
 
-            // Статистика
             let sport = 0, sloppy = 0, both = 0;
             allEntries.forEach(doc => {
                 const c = doc.data().choice || 'none';
@@ -489,7 +486,6 @@
             bothCount.textContent = both;
             totalDaysSpan.textContent = 'Всего: ' + allEntries.length;
 
-            // Календарь (последние 30 дней)
             const todayObj = new Date();
             const cells = [];
             for (let i = 29; i >= 0; i--) {
@@ -509,16 +505,13 @@
                 if (isToday) cls += ' today';
                 cells.push(`<div class="${cls}">${d.getDate()}</div>`);
             }
-            // Добавим заголовки дней недели
             const weekdays = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
             const header = weekdays.map(w => `<div class="day-label">${w}</div>`).join('');
             calendarGrid.innerHTML = header + cells.join('');
 
-            // Цитата
             const q = randomQuote();
             quoteBox.innerHTML = `«${q.text}»<div class="author">${q.author}</div>`;
 
-            // Подсветка кнопок (активный выбор сегодня)
             choiceBtns.forEach(btn => {
                 btn.className = 'btn-choice';
                 if (todayDoc && todayDoc.data().choice === btn.dataset.choice) {
@@ -572,14 +565,12 @@
         // 6. ОБРАБОТЧИКИ СОБЫТИЙ
         // ================================================================
 
-        // Выбор кнопки
         choiceBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 setChoice(btn.dataset.choice);
             });
         });
 
-        // Авторизация
         authBtn.addEventListener('click', async () => {
             const email = emailInput.value.trim();
             const pass = passwordInput.value.trim();
@@ -633,7 +624,6 @@
             }
         });
 
-        // Начальный рендер
         render();
     </script>
 </body>
